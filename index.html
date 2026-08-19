@@ -11,12 +11,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
 <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{--bg:#000;--bg2:#0a0a0a;--card:#111;--card2:#161616;--brd:#1f1f1f;--brd2:#2a2a2a;--inp:#0d0d0d;--gold:#e8c988;--gold2:#d4b16a;--gold3:#f5e5bc;--gold-glow:rgba(232,201,136,.15);--green:#4ade80;--red:#f87171;--blue:#60a5fa;--purple:#a78bfa;--cyan:#67e8f9;--txt:#fff;--txt2:#e5e5e5;--mut:#8a8a8a;--mut2:#6a6a6a;--glow:0 0 40px rgba(232,201,136,.08)}
 body.t-light{--bg:#f5f7fa;--bg2:#fff;--card:#fff;--card2:#f8fafc;--brd:#e2e8f0;--brd2:#cbd5e1;--inp:#f8fafc;--gold:#0284c7;--gold2:#0369a1;--gold3:#0ea5e9;--gold-glow:rgba(2,132,199,.12);--green:#059669;--red:#dc2626;--blue:#2563eb;--purple:#7c3aed;--cyan:#0891b2;--txt:#0f172a;--txt2:#334155;--mut:#64748b;--mut2:#94a3b8;--glow:0 4px 20px rgba(15,23,42,.06)}
-body.t-ocean{--bg:#0a192f;--bg2:#0d2340;--card:#112240;--card2:#152a4a;--brd:#233554;--brd2:#2d4266;--inp:#0d1e35;--gold:#64ffda;--gold2:#4fd1c5;--gold-glow:rgba(100,255,218,.15);--green:#10b981;--red:#f43f5e;--blue:#38bdf8;--purple:#a855f7;--cyan:#22d3ee;--txt:#e6f1ff;--txt2:#ccd6f6;--mut:#8892b0;--mut2:#64748b}
-body.t-royal{--bg:#13111c;--bg2:#1a1727;--card:#1f1b2e;--card2:#252035;--brd:#2d2843;--brd2:#3a3454;--inp:#181524;--gold:#c084fc;--gold2:#a855f7;--gold-glow:rgba(192,132,252,.15);--green:#34d399;--red:#fb7185;--blue:#60a5fa;--purple:#c084fc;--cyan:#67e8f9;--txt:#f3e8ff;--txt2:#e9d5ff;--mut:#9b8cae;--mut2:#7a6d8f}
-body.t-emerald{--bg:#0a1f14;--bg2:#0f2a1c;--card:#132e21;--card2:#1a3a2b;--brd:#1f4530;--brd2:#2a5540;--inp:#0d2618;--gold:#34d399;--gold2:#10b981;--gold-glow:rgba(52,211,153,.15);--green:#6ee7b7;--red:#fca5a5;--blue:#7dd3fc;--purple:#c084fc;--cyan:#67e8f9;--txt:#ecfdf5;--txt2:#d1fae5;--mut:#86b7a3;--mut2:#5e8a7b}
+body.t-ocean{--bg:#0a192f;--card:#112240;--card2:#152a4a;--brd:#233554;--brd2:#2d4266;--inp:#0d1e35;--gold:#64ffda;--gold2:#4fd1c5;--gold-glow:rgba(100,255,218,.15);--green:#10b981;--red:#f43f5e;--blue:#38bdf8;--purple:#a855f7;--cyan:#22d3ee;--txt:#e6f1ff;--txt2:#ccd6f6;--mut:#8892b0;--mut2:#64748b}
+body.t-royal{--bg:#13111c;--card:#1f1b2e;--card2:#252035;--brd:#2d2843;--brd2:#3a3454;--inp:#181524;--gold:#c084fc;--gold2:#a855f7;--gold-glow:rgba(192,132,252,.15);--green:#34d399;--red:#fb7185;--blue:#60a5fa;--purple:#c084fc;--cyan:#67e8f9;--txt:#f3e8ff;--txt2:#e9d5ff;--mut:#9b8cae;--mut2:#7a6d8f}
+body.t-emerald{--bg:#0a1f14;--card:#132e21;--card2:#1a3a2b;--brd:#1f4530;--brd2:#2a5540;--inp:#0d2618;--gold:#34d399;--gold2:#10b981;--gold-glow:rgba(52,211,153,.15);--green:#6ee7b7;--red:#fca5a5;--blue:#7dd3fc;--purple:#c084fc;--cyan:#67e8f9;--txt:#ecfdf5;--txt2:#d1fae5;--mut:#86b7a3;--mut2:#5e8a7b}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;transition:background .3s,color .2s,border-color .2s}
 body{background:var(--bg);color:var(--txt);padding:16px;direction:rtl;min-height:100vh;font-size:14px}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 20% 10%,var(--gold-glow),transparent 60%),radial-gradient(ellipse at 80% 90%,var(--gold-glow),transparent 50%);pointer-events:none;z-index:0;opacity:.5}
@@ -61,15 +62,25 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:10001;display:none;flex-direction:column;justify-content:center;align-items:center;gap:20px}
 .lightbox img{max-width:92%;max-height:78vh;border-radius:12px}
 .lb-back{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;padding:12px 36px;border-radius:10px;font-weight:700;cursor:pointer}
-#authOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);z-index:9999;display:flex;justify-content:center;align-items:center}
-.auth-card{background:var(--card);border:1px solid var(--brd);padding:30px 40px 40px;border-radius:16px;width:440px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
-.auth-card h2{font-size:1.3rem;font-weight:700}
-.auth-card p{font-size:.85rem;color:var(--mut)}
-.auth-card input{width:100%;background:var(--inp);border:1px solid var(--brd);color:var(--txt);padding:13px 15px;border-radius:10px;font-size:.9rem;outline:none;text-align:center}
-.auth-card input:focus{border-color:var(--gold)}
-.auth-card button{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);font-weight:700;border:none;padding:13px;border-radius:10px;cursor:pointer}
-.auth-err{color:var(--red);font-size:.82rem;display:none}
-.auth-lnk{color:var(--gold);font-size:.85rem;cursor:pointer;text-decoration:underline}
+#authOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);z-index:9999;display:flex;justify-content:center;align-items:center;overflow-y:auto;padding:20px}
+.auth-card{background:var(--card);border:1px solid var(--brd);padding:26px 34px 32px;border-radius:16px;width:460px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:100%}
+.auth-card h2{font-size:1.25rem;font-weight:700}
+.auth-card p{font-size:.82rem;color:var(--mut)}
+.auth-card input,.auth-card select{width:100%;background:var(--inp);border:1px solid var(--brd);color:var(--txt);padding:12px 15px;border-radius:10px;font-size:.9rem;outline:none;text-align:center;font-family:'Vazirmatn'}
+.auth-card input:focus,.auth-card select:focus{border-color:var(--gold)}
+.auth-card button{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);font-weight:700;border:none;padding:12px;border-radius:10px;cursor:pointer;font-size:.92rem}
+.auth-err{color:var(--red);font-size:.8rem;display:none}
+.auth-ok{color:var(--green);font-size:.8rem;display:none;background:rgba(74,222,128,.08);padding:8px;border-radius:8px}
+.auth-lnk{color:var(--gold);font-size:.82rem;cursor:pointer;text-decoration:underline}
+.auth-tabs{display:flex;gap:5px;width:100%;background:var(--inp);padding:5px;border-radius:10px}
+.auth-tab{flex:1;padding:9px;border:none;background:transparent;color:var(--mut);cursor:pointer;font-family:'Vazirmatn';font-weight:600;font-size:.82rem;border-radius:7px;transition:all .2s}
+.auth-tab-active{background:var(--card);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.otp-box{display:flex;justify-content:center;gap:8px;direction:ltr}
+.otp-digit{width:44px;height:52px;text-align:center;font-size:1.4rem;font-weight:700;background:var(--inp);border:2px solid var(--brd);color:var(--gold);border-radius:8px;outline:none;font-family:'Vazirmatn'}
+.otp-digit:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow)}
+.dev-otp-box{background:linear-gradient(135deg,rgba(232,201,136,.1),rgba(232,201,136,.05));border:2px dashed var(--gold);border-radius:10px;padding:14px;text-align:center;margin-top:10px}
+.dev-otp-code{font-size:1.8rem;font-weight:900;color:var(--gold);letter-spacing:6px;font-family:monospace;margin:6px 0}
+.dev-otp-copy{background:var(--card);border:1px solid var(--gold);color:var(--gold);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.78rem;font-family:'Vazirmatn'}
 .user-bar{display:flex;align-items:center;gap:9px;background:var(--card2);border:1px solid var(--brd);padding:6px 12px;border-radius:8px;font-size:.85rem}
 .user-bar span.uname{color:var(--gold);font-weight:600}
 .btn-out{background:transparent;color:var(--red);border:1px solid var(--red);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.78rem}
@@ -154,6 +165,24 @@ tr:hover{background:var(--gold-glow)}
 .twa{background:linear-gradient(135deg,#d97706,#f59e0b);color:#000}
 @keyframes tI{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes tO{to{opacity:0;transform:translateX(-30px)}}
+.um-tab{background:transparent;border:none;color:var(--mut);padding:10px 16px;cursor:pointer;font-family:'Vazirmatn';font-size:.9rem;font-weight:600;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.um-tab:hover{color:var(--gold)}
+.um-tab-active{color:var(--gold);border-bottom-color:var(--gold)}
+.user-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--inp);border:1px solid var(--brd);border-radius:10px;margin-bottom:8px}
+.user-item:hover{border-color:var(--gold)}
+.user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--bg);font-size:1.1rem;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-info .un{font-weight:700;color:var(--txt)}
+.user-info .um-info{font-size:.75rem;color:var(--mut);margin-top:2px}
+.status-badge{padding:2px 8px;border-radius:5px;font-size:.7rem;font-weight:700}
+.st-active{background:rgba(74,222,128,.15);color:var(--green)}
+.st-suspended{background:rgba(245,158,11,.15);color:#f59e0b}
+.st-banned{background:rgba(248,113,113,.15);color:var(--red)}
+.role-badge{padding:2px 8px;border-radius:5px;font-size:.7rem;font-weight:700;margin-right:4px}
+.role-admin{background:rgba(232,201,136,.15);color:var(--gold)}
+.role-user{background:rgba(96,165,250,.15);color:var(--blue)}
+.verified{color:var(--green);font-size:.7rem;background:rgba(74,222,128,.1);padding:1px 6px;border-radius:4px;margin-right:3px}
+.unverified{color:var(--red);font-size:.7rem;background:rgba(248,113,113,.1);padding:1px 6px;border-radius:4px;margin-right:3px}
 @media(max-width:1300px){.sg{grid-template-columns:repeat(4,1fr)}.mg{grid-template-columns:1fr}}
 @media(max-width:768px){.sg{grid-template-columns:repeat(2,1fr)}.sgr{grid-template-columns:1fr}}
 </style>
@@ -205,8 +234,8 @@ tr:hover{background:var(--gold-glow)}
 <circle cx="185" cy="383" r="1.5" fill="url(#goldMain)"/>
 <circle cx="215" cy="383" r="1.5" fill="url(#goldMain)"/>
 </g>
-<text x="200" y="435" text-anchor="middle" font-family="Georgia, serif" font-size="42" font-weight="900" fill="url(#goldMain)" stroke="url(#goldDeep)" stroke-width="0.5" letter-spacing="3" class="brand-text-shine">NILMAHRISE</text>
-<text x="200" y="463" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="url(#goldMain)" letter-spacing="4" opacity=".85">AUTOMATED TRADING BOT</text>
+<text x="200" y="435" text-anchor="middle" font-family="Georgia,serif" font-size="42" font-weight="900" fill="url(#goldMain)" stroke="url(#goldDeep)" stroke-width="0.5" letter-spacing="3" class="brand-text-shine">NILMAHRISE</text>
+<text x="200" y="463" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="600" fill="url(#goldMain)" letter-spacing="4" opacity=".85">AUTOMATED TRADING BOT</text>
 <g opacity=".6">
 <line x1="90" y1="478" x2="180" y2="478" stroke="url(#goldMain)" stroke-width="1"/>
 <line x1="220" y1="478" x2="310" y2="478" stroke="url(#goldMain)" stroke-width="1"/>
@@ -222,55 +251,235 @@ tr:hover{background:var(--gold-glow)}
 <div class="lightbox" id="lightbox"><img id="lbImg"><button class="lb-back" onclick="document.getElementById('lightbox').style.display='none'">← بازگشت</button></div>
 <div class="tc2" id="toastC"></div>
 
+<!-- ===== AUTH OVERLAY ===== -->
 <div id="authOverlay"><div class="auth-card">
-<div class="nlm-logo logo-motion" style="width:220px;height:315px" id="logoAuth"></div>
-<div id="loginForm" style="width:100%">
-<h2>ورود</h2>
-<p style="margin-top:4px">🌙 ژورنال معاملات حرفه‌ای</p>
-<input type="text" id="lUser" placeholder="نام کاربری" style="margin-top:12px">
-<input type="password" id="lPass" placeholder="رمز عبور" onkeypress="if(event.key==='Enter')doLogin()" style="margin-top:8px">
-<div class="auth-err" id="lErr">اشتباه!</div>
-<button onclick="doLogin()" style="margin-top:10px">ورود</button>
-<div class="auth-lnk" onclick="$('#loginForm').hide();$('#regForm').show()" style="margin-top:8px">ثبت‌نام</div>
+<div class="nlm-logo logo-motion" style="width:200px;height:285px" id="logoAuth"></div>
+
+<!-- ===== LOGIN FORM ===== -->
+<div id="loginForm" style="width:100%;display:flex;flex-direction:column;gap:12px">
+<h2>ورود به سیستم</h2>
+<div class="auth-tabs">
+<button class="auth-tab auth-tab-active" onclick="switchLoginMethod('password')" id="lmt-pass">🔑 رمز</button>
+<button class="auth-tab" onclick="switchLoginMethod('phone')" id="lmt-phone">📱 شماره</button>
+<button class="auth-tab" onclick="switchLoginMethod('email')" id="lmt-email">✉️ ایمیل</button>
 </div>
-<div id="regForm" style="display:none;width:100%">
+
+<!-- Password Login -->
+<div id="loginPass" class="login-method">
+<input type="text" id="lUser" placeholder="نام کاربری">
+<input type="password" id="lPass" placeholder="رمز عبور" onkeypress="if(event.key==='Enter')doLogin()">
+<button onclick="doLogin()">ورود</button>
+</div>
+
+<!-- Phone Login -->
+<div id="loginPhone" class="login-method" style="display:none">
+<input type="tel" id="lPhone" placeholder="09xxxxxxxxx" maxlength="11">
+<button onclick="sendPhoneOTP('login')" id="lPhoneBtn">📩 ارسال کد تایید</button>
+<div id="lPhoneOtpArea" style="display:none;width:100%;display:none;flex-direction:column;gap:10px">
+<p style="font-size:.8rem">کد ۶ رقمی ارسال شده را وارد کنید:</p>
+<div class="otp-box"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"></div>
+<div id="lPhoneDevOtp"></div>
+<button onclick="verifyPhoneOTP('login')">✓ تایید و ورود</button>
+<button onclick="resendPhoneOTP('login')" style="background:transparent;color:var(--gold);border:1px solid var(--gold)">🔄 ارسال مجدد</button>
+</div>
+</div>
+
+<!-- Email Login -->
+<div id="loginEmail" class="login-method" style="display:none">
+<input type="email" id="lEmail" placeholder="example@mail.com">
+<button onclick="sendEmailOTP('login')" id="lEmailBtn">📩 ارسال کد به ایمیل</button>
+<div id="lEmailOtpArea" style="display:none;width:100%;flex-direction:column;gap:10px">
+<p style="font-size:.8rem">کد ۶ رقمی ایمیل شده را وارد کنید:</p>
+<div class="otp-box"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"><input class="otp-digit" maxlength="1"></div>
+<div id="lEmailDevOtp"></div>
+<button onclick="verifyEmailOTP('login')">✓ تایید و ورود</button>
+<button onclick="resendEmailOTP('login')" style="background:transparent;color:var(--gold);border:1px solid var(--gold)">🔄 ارسال مجدد</button>
+</div>
+</div>
+
+<div class="auth-err" id="lErr"></div>
+<div class="auth-ok" id="lOk"></div>
+<div class="auth-lnk" onclick="$('#loginForm').hide();$('#regForm').show()">ثبت‌نام کاربر جدید</div>
+</div>
+
+<!-- ===== REGISTER FORM ===== -->
+<div id="regForm" style="display:none;width:100%;flex-direction:column;gap:10px">
 <h2>ثبت‌نام</h2>
-<input type="text" id="rName" placeholder="نام" style="margin-top:10px">
-<input type="text" id="rUser" placeholder="نام کاربری" style="margin-top:8px">
-<input type="password" id="rPass" placeholder="رمز" style="margin-top:8px">
+<input type="text" id="rName" placeholder="نام کامل">
+<input type="text" id="rUser" placeholder="نام کاربری (اختیاری اگر با شماره ثبت‌نام می‌کنید)">
+<input type="password" id="rPass" placeholder="رمز عبور">
+<input type="tel" id="rPhone" placeholder="📱 شماره تلفن (اختیاری - 09xxx)" maxlength="11">
+<input type="email" id="rEmail" placeholder="✉️ ایمیل (اختیاری)">
 <div class="auth-err" id="rErr"></div>
-<button onclick="doReg()" style="margin-top:10px">ثبت‌نام</button>
-<div class="auth-lnk" onclick="$('#regForm').hide();$('#loginForm').show()" style="margin-top:8px">ورود</div>
+<button onclick="doReg()">ثبت‌نام</button>
+<div class="auth-lnk" onclick="$('#regForm').hide();$('#loginForm').show()">قبلاً ثبت‌نام کرده‌ام</div>
 </div>
+
+</div></div>
+
+<!-- ===== USER MANAGEMENT MODAL ===== -->
+<div id="userMgmtM" class="mo"><div class="mc" style="max-width:900px">
+<div class="mh"><span>👥 مدیریت کاربران</span><button class="mx" onclick="$('#userMgmtM').hide()">✕</button></div>
+<div style="display:flex;gap:8px;border-bottom:2px solid var(--brd);margin-bottom:14px;flex-wrap:wrap">
+<button class="um-tab um-tab-active" onclick="switchTab('profile')" id="tab-profile">👤 پروفایل</button>
+<button class="um-tab" onclick="switchTab('verify')" id="tab-verify">✅ احراز</button>
+<button class="um-tab" onclick="switchTab('security')" id="tab-security">🔒 امنیت</button>
+<button class="um-tab" onclick="switchTab('activity')" id="tab-activity">📊 فعالیت</button>
+<button class="um-tab" onclick="switchTab('users')" id="tab-users" style="display:none">👥 کاربران</button>
+<button class="um-tab" onclick="switchTab('smsconfig')" id="tab-smsconfig" style="display:none">⚙️ تنظیمات SMS</button>
+</div>
+
+<!-- Profile Tab -->
+<div id="pane-profile" class="um-pane">
+<div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start">
+<div style="text-align:center">
+<div id="userAvatar" style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--bg);font-weight:800;margin:0 auto">A</div>
+<div style="margin-top:10px;font-size:.85rem;color:var(--mut)" id="userRole">کاربر عادی</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="fg"><label>نام کامل</label><input type="text" id="pf_name"></div>
+<div class="fg"><label>نام کاربری</label><input type="text" id="pf_uname" readonly style="background:var(--card2);color:var(--mut)"></div>
+<div class="fg" style="grid-column:span 2"><label>بیوگرافی</label><textarea id="pf_bio" rows="2" placeholder="درباره خودت..."></textarea></div>
+<div class="fg"><label>سبک معاملاتی</label><select id="pf_style"><option value="Scalper">اسکلپر</option><option value="Day Trader">روزانه</option><option value="Swing">سویینگ</option><option value="Position">پوزیشن</option></select></div>
+<div class="fg"><label>سطح تجربه</label><select id="pf_exp"><option value="Beginner">مبتدی</option><option value="Intermediate">متوسط</option><option value="Advanced">پیشرفته</option><option value="Expert">حرفه‌ای</option></select></div>
+</div>
+</div>
+<button class="bsub" onclick="saveProfile()">💾 ذخیره پروفایل</button>
+</div>
+
+<!-- Verify Tab -->
+<div id="pane-verify" class="um-pane" style="display:none">
+<h4 style="color:var(--gold);margin-bottom:12px">📱 احراز شماره تلفن</h4>
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+<input type="tel" id="v_phone" placeholder="09xxxxxxxxx" maxlength="11" style="flex:1;padding:9px 11px;background:var(--inp);border:1px solid var(--brd);color:var(--txt);border-radius:8px;outline:none;font-family:'Vazirmatn'">
+<button class="bh bg-btn" onclick="sendVerifyPhoneOTP()" id="vPhoneBtn">📩 ارسال کد</button>
+</div>
+<div id="vPhoneStatus" style="font-size:.8rem;color:var(--mut)"></div>
+<div id="vPhoneOtpArea" style="display:none;margin-top:10px">
+<p style="font-size:.82rem;margin-bottom:6px">کد ۶ رقمی:</p>
+<div style="display:flex;gap:8px;align-items:center">
+<input type="text" id="vPhoneCode" placeholder="123456" maxlength="6" style="flex:1;padding:9px 11px;background:var(--inp);border:1px solid var(--brd);color:var(--gold);border-radius:8px;outline:none;font-family:monospace;font-size:1.2rem;text-align:center;letter-spacing:5px">
+<button class="bh bg-btn" onclick="confirmVerifyPhone()">✓ تایید</button>
+</div>
+<div id="vPhoneDevOtp"></div>
+</div>
+
+<hr style="border:none;border-top:1px solid var(--brd);margin:20px 0">
+
+<h4 style="color:var(--gold);margin-bottom:12px">✉️ احراز ایمیل</h4>
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+<input type="email" id="v_email" placeholder="example@mail.com" style="flex:1;padding:9px 11px;background:var(--inp);border:1px solid var(--brd);color:var(--txt);border-radius:8px;outline:none;font-family:'Vazirmatn'">
+<button class="bh bg-btn" onclick="sendVerifyEmailOTP()" id="vEmailBtn">📩 ارسال کد</button>
+</div>
+<div id="vEmailStatus" style="font-size:.8rem;color:var(--mut)"></div>
+<div id="vEmailOtpArea" style="display:none;margin-top:10px">
+<p style="font-size:.82rem;margin-bottom:6px">کد ۶ رقمی:</p>
+<div style="display:flex;gap:8px;align-items:center">
+<input type="text" id="vEmailCode" placeholder="123456" maxlength="6" style="flex:1;padding:9px 11px;background:var(--inp);border:1px solid var(--brd);color:var(--gold);border-radius:8px;outline:none;font-family:monospace;font-size:1.2rem;text-align:center;letter-spacing:5px">
+<button class="bh bg-btn" onclick="confirmVerifyEmail()">✓ تایید</button>
+</div>
+<div id="vEmailDevOtp"></div>
+</div>
+</div>
+
+<!-- Users Tab -->
+<div id="pane-users" class="um-pane" style="display:none">
+<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+<input type="text" class="ts" id="userSearch" placeholder="🔍 جستجو..." oninput="renderUsersList()">
+<button class="bh bg-btn" onclick="openAddUser()">➕ افزودن کاربر</button>
+<span style="color:var(--mut);font-size:.82rem;margin-right:auto" id="usersCnt">0</span>
+</div>
+<div id="usersList" style="max-height:400px;overflow-y:auto"></div>
+<div id="userForm" style="display:none;background:var(--card2);padding:16px;border-radius:10px;margin-top:14px;border:1px solid var(--brd)">
+<h4 style="color:var(--gold);margin-bottom:12px" id="userFormTitle">➕ افزودن کاربر</h4>
+<input type="hidden" id="uf_editKey" value="">
+<div class="fr">
+<div class="fg"><label>نام</label><input type="text" id="uf_name" required></div>
+<div class="fg"><label>نام کاربری</label><input type="text" id="uf_uname" required></div>
+<div class="fg"><label>رمز</label><input type="text" id="uf_pass" required></div>
+<div class="fg"><label>نقش</label><select id="uf_role"><option value="user">کاربر</option><option value="admin">ادمین</option></select></div>
+</div>
+<div class="fr">
+<div class="fg"><label>ایمیل</label><input type="email" id="uf_email"></div>
+<div class="fg"><label>تلفن</label><input type="tel" id="uf_phone"></div>
+<div class="fg"><label>وضعیت</label><select id="uf_status"><option value="active">✅ فعال</option><option value="suspended">⏸️ معلق</option><option value="banned">🚫 مسدود</option></select></div>
+</div>
+<div style="display:flex;gap:8px">
+<button class="bsub" onclick="saveUser()" style="margin-top:0">💾 ذخیره</button>
+<button class="bh" onclick="$('#userForm').hide()" style="margin-top:0">لغو</button>
+</div>
+</div>
+</div>
+
+<!-- Security Tab -->
+<div id="pane-security" class="um-pane" style="display:none">
+<h4 style="color:var(--gold);margin-bottom:14px">🔐 تغییر نام کاربری و رمز</h4>
+<div class="fr"><div class="fg"><label>رمز فعلی</label><input type="password" id="sec_curPass"></div></div>
+<hr style="border:none;border-top:1px solid var(--brd);margin:14px 0">
+<div class="fr">
+<div class="fg"><label>نام کاربری جدید</label><input type="text" id="sec_newUname" placeholder="خالی=بدون تغییر"></div>
+<div class="fg"><label>رمز جدید</label><input type="password" id="sec_newPass" placeholder="خالی=بدون تغییر"></div>
+<div class="fg"><label>تکرار رمز</label><input type="password" id="sec_newPass2"></div>
+</div>
+<div id="passStrength" style="display:none;margin-top:8px;padding:8px 12px;border-radius:6px;font-size:.8rem"></div>
+<button class="bsub" onclick="changeCredentials()">🔒 اعمال</button>
+<hr style="border:none;border-top:1px solid var(--brd);margin:20px 0">
+<h4 style="color:var(--red);margin-bottom:10px">⚠️ منطقه خطرناک</h4>
+<button class="bh bh-danger" onclick="deleteMyAccount()" style="width:100%">🗑️ حذف کامل حساب</button>
+</div>
+
+<!-- Activity Tab -->
+<div id="pane-activity" class="um-pane" style="display:none">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+<div class="sc"><span>معاملات</span><h2 id="act_total">0</h2></div>
+<div class="sc"><span>ثبت‌نام</span><h2 id="act_regDate" style="font-size:.85rem">-</h2></div>
+<div class="sc"><span>آخرین ورود</span><h2 id="act_lastLogin" style="font-size:.85rem">-</h2></div>
+<div class="sc"><span>ورودها</span><h2 id="act_loginCnt">0</h2></div>
+</div>
+<h4 style="color:var(--gold);margin:14px 0 10px">آخرین فعالیت‌ها</h4>
+<div id="activityLog" style="background:var(--inp);padding:12px;border-radius:8px;max-height:250px;overflow-y:auto;font-size:.85rem"></div>
+</div>
+
+<!-- SMS Config Tab (Admin only) -->
+<div id="pane-smsconfig" class="um-pane" style="display:none">
+<h4 style="color:var(--gold);margin-bottom:12px">⚙️ تنظیمات ارسال SMS و Email</h4>
+<div style="background:var(--inp);padding:14px;border-radius:8px;margin-bottom:14px;font-size:.85rem;line-height:1.7">
+<p><b style="color:var(--gold)">📱 حالت فعلی: توسعه (Development)</b></p>
+<p style="color:var(--mut);margin-top:6px">در این حالت، کد OTP روی صفحه نمایش داده می‌شود و پیامک واقعی ارسال نمی‌شود. برای فعال‌سازی SMS واقعی، از پنل ایرانی زیر استفاده کنید:</p>
+</div>
+
+<h4 style="color:var(--gold);margin:14px 0 8px">📱 پیکربندی SMS (کاوه‌نگار)</h4>
+<div style="background:var(--card2);padding:12px;border-radius:8px;font-size:.8rem;color:var(--mut);margin-bottom:10px">
+<p>1️⃣ در <a href="https://kavenegar.com" target="_blank" style="color:var(--gold)">کاوه‌نگار</a> ثبت‌نام کنید (رایگان + شارژ اولیه)</p>
+<p>2️⃣ API Key خود را دریافت کنید</p>
+<p>3️⃣ در پنل، الگو (template) بسازید مثلاً: "کد تایید NilmahRise: %token"</p>
+<p>4️⃣ ⚠️ توجه: به دلیل محدودیت CORS، این تنظیمات فقط با یک Backend یا Cloudflare Worker کار می‌کند</p>
+</div>
+<div class="fr">
+<div class="fg"><label>API Key کاوه‌نگار</label><input type="text" id="cfg_smsKey" placeholder="اختیاری"></div>
+<div class="fg"><label>نام Template</label><input type="text" id="cfg_smsTpl" placeholder="verify"></div>
+</div>
+
+<h4 style="color:var(--gold);margin:14px 0 8px">✉️ پیکربندی Email (EmailJS - رایگان)</h4>
+<div style="background:var(--card2);padding:12px;border-radius:8px;font-size:.8rem;color:var(--mut);margin-bottom:10px">
+<p>1️⃣ در <a href="https://www.emailjs.com" target="_blank" style="color:var(--gold)">EmailJS.com</a> ثبت‌نام کنید (200 ایمیل رایگان/ماه)</p>
+<p>2️⃣ Service ID، Template ID و Public Key دریافت کنید</p>
+<p>3️⃣ در Template متغیر <code>{{otp_code}}</code> و <code>{{to_email}}</code> بگذارید</p>
+</div>
+<div class="fr">
+<div class="fg"><label>Service ID</label><input type="text" id="cfg_emailSvc" placeholder="service_xxx"></div>
+<div class="fg"><label>Template ID</label><input type="text" id="cfg_emailTpl" placeholder="template_xxx"></div>
+<div class="fg"><label>Public Key</label><input type="text" id="cfg_emailKey" placeholder="xxxx"></div>
+</div>
+<button class="bsub" onclick="saveConfig()">💾 ذخیره تنظیمات</button>
+</div>
+
 </div></div>
 
 <div id="rptM" class="mo"><div class="mc">
-<div class="mh"><span>📊 آنالیز روانشناسی</span><button class="mx" onclick="$('#rptM').hide()">✕</button></div>
+<div class="mh"><span>📊 آنالیز</span><button class="mx" onclick="$('#rptM').hide()">✕</button></div>
 <div class="fr">
-<div class="fg"><label>رفتار</label><select id="rptE" onchange="genRpt()">
-<option value="ALL">همه رفتارها</option>
-<optgroup label="حرفه‌ای">
-<option value="Plan">طبق پلان</option>
-<option value="Patient">صبور</option>
-<option value="Disciplined">با انضباط</option>
-<option value="Focused">تمرکز کامل</option>
-</optgroup>
-<optgroup label="اشتباهات عاطفی">
-<option value="FOMO">FOMO</option>
-<option value="Revenge">انتقامی</option>
-<option value="Greed">طمع</option>
-<option value="Fear">ترس</option>
-<option value="Hope">امید واهی</option>
-<option value="Panic">پنیک</option>
-</optgroup>
-<optgroup label="اشتباهات رفتاری">
-<option value="Overtrading">اورتردینگ</option>
-<option value="No SL">بدون SL</option>
-<option value="Moved SL">جابجایی SL</option>
-<option value="Early Exit">خروج زودهنگام</option>
-<option value="Averaging Down">میانگین‌گیری ضرر</option>
-</optgroup>
-</select></div>
+<div class="fg"><label>رفتار</label><select id="rptE" onchange="genRpt()"><option value="ALL">همه</option></select></div>
 <div class="fg"><label>ستاپ</label><select id="rptS" onchange="genRpt()"><option value="ALL">همه</option></select></div>
 <div class="fg"><label>نماد</label><select id="rptSy" onchange="genRpt()"><option value="ALL">همه</option></select></div>
 </div>
@@ -286,19 +495,18 @@ tr:hover{background:var(--gold-glow)}
 <div class="ha">
 <div class="user-bar" id="userBar" style="display:none"><span>👤</span><span class="uname" id="curU">-</span><button class="btn-out" onclick="doLogout()">خروج</button></div>
 <div class="ci">
-<div class="cb"><span>💰 سرمایه</span><input type="number" id="capIn" value="100" oninput="renderAll()"></div>
-<div class="cb"><span>💵 تتر</span><input type="number" id="usdtIn" value="186000" oninput="renderAll()"></div>
-<div class="cb"><span>🛡️ DD%</span><input type="number" step="0.1" id="ddIn" value="5.0" oninput="renderAll()"></div>
+<div class="cb"><span>💰</span><input type="number" id="capIn" value="100" oninput="renderAll()"></div>
+<div class="cb"><span>💵</span><input type="number" id="usdtIn" value="186000" oninput="renderAll()"></div>
+<div class="cb"><span>🛡️</span><input type="number" step="0.1" id="ddIn" value="5.0" oninput="renderAll()"></div>
 </div>
-<select class="sel" id="thS" onchange="setTheme(this.value)">
-<option value="dark">🌑 Dark</option><option value="light">☀️ Light</option><option value="ocean">🌊 Ocean</option><option value="royal">👑 Royal</option><option value="emerald">💚 Emerald</option>
-</select>
-<button class="bh bg-btn" onclick="document.getElementById('mt5F').click()">📥 آپلود MT5</button>
+<select class="sel" id="thS" onchange="setTheme(this.value)"><option value="dark">🌑 Dark</option><option value="light">☀️ Light</option><option value="ocean">🌊 Ocean</option><option value="royal">👑 Royal</option><option value="emerald">💚 Emerald</option></select>
+<button class="bh bg-btn" onclick="document.getElementById('mt5F').click()">📥 MT5</button>
 <input type="file" id="mt5F" accept=".csv,.htm,.html,.xlsx,.xls" style="display:none" onchange="importMT5(event)">
 <button class="bh" onclick="$('#rptM').css('display','flex');popRF();genRpt()">📊 آنالیز</button>
 <button class="bh" onclick="exportCSV()">📈 اکسل</button>
-<button class="bh bh-danger" onclick="clearAll()">🗑️ پاک</button>
-<button class="bh bh-restore" id="btnR" onclick="restore()">🔄 بازگردانی</button>
+<button class="bh" onclick="openUserMgmt()" style="color:var(--purple);border-color:var(--purple)">👥 مدیریت</button>
+<button class="bh bh-danger" onclick="clearAll()">🗑️</button>
+<button class="bh bh-restore" id="btnR" onclick="restore()">🔄</button>
 </div>
 </header>
 
@@ -310,7 +518,7 @@ tr:hover{background:var(--gold-glow)}
 <div class="sc"><span>سود/زیان</span><h2 id="k3" class="cg" style="font-size:.9rem">$0<br><span style="font-size:.7rem;color:var(--mut)">0 ت</span></h2></div>
 <div class="sc"><span>R:R</span><h2 id="k4" class="cbl">1:0</h2></div>
 <div class="sc"><span>پرافیت فاکتور</span><h2 id="k5" class="cpu">0</h2></div>
-<div class="sc"><span>بیشترین سود/زیان</span><h2 id="k6" style="font-size:.82rem">$0/$0</h2></div>
+<div class="sc"><span>بیشترین</span><h2 id="k6" style="font-size:.82rem">$0/$0</h2></div>
 <div class="sc"><span>استریک</span><h2 id="k7" class="ccy">-</h2></div>
 </div>
 
@@ -333,108 +541,18 @@ tr:hover{background:var(--gold-glow)}
 <div class="fr">
 <div class="fg" style="grid-column:span 2"><label>نماد</label>
 <select id="f_sym" required>
-<optgroup label="🥇 فلزات گرانبها">
-<option value="XAUUSD">XAUUSD (طلا)</option>
-<option value="XAGUSD">XAGUSD (نقره)</option>
-<option value="XPTUSD">XPTUSD (پلاتین)</option>
-<option value="XPDUSD">XPDUSD (پالادیوم)</option>
-</optgroup>
-<optgroup label="💵 ارزهای اصلی (Majors)">
-<option value="EURUSD">EURUSD</option>
-<option value="GBPUSD">GBPUSD</option>
-<option value="USDJPY">USDJPY</option>
-<option value="USDCHF">USDCHF</option>
-<option value="AUDUSD">AUDUSD</option>
-<option value="USDCAD">USDCAD</option>
-<option value="NZDUSD">NZDUSD</option>
-</optgroup>
-<optgroup label="🔀 کراس یورو">
-<option value="EURGBP">EURGBP</option>
-<option value="EURJPY">EURJPY</option>
-<option value="EURCHF">EURCHF</option>
-<option value="EURAUD">EURAUD</option>
-<option value="EURCAD">EURCAD</option>
-<option value="EURNZD">EURNZD</option>
-</optgroup>
-<optgroup label="🔀 کراس پوند">
-<option value="GBPJPY">GBPJPY</option>
-<option value="GBPCHF">GBPCHF</option>
-<option value="GBPAUD">GBPAUD</option>
-<option value="GBPCAD">GBPCAD</option>
-<option value="GBPNZD">GBPNZD</option>
-</optgroup>
-<optgroup label="🔀 کراس ین">
-<option value="AUDJPY">AUDJPY</option>
-<option value="CADJPY">CADJPY</option>
-<option value="CHFJPY">CHFJPY</option>
-<option value="NZDJPY">NZDJPY</option>
-</optgroup>
-<optgroup label="🔀 کراس‌های دیگر">
-<option value="AUDCAD">AUDCAD</option>
-<option value="AUDCHF">AUDCHF</option>
-<option value="AUDNZD">AUDNZD</option>
-<option value="CADCHF">CADCHF</option>
-<option value="NZDCAD">NZDCAD</option>
-<option value="NZDCHF">NZDCHF</option>
-</optgroup>
-<optgroup label="🌍 اگزوتیک">
-<option value="USDTRY">USDTRY</option>
-<option value="USDZAR">USDZAR</option>
-<option value="USDMXN">USDMXN</option>
-<option value="USDSEK">USDSEK</option>
-<option value="USDNOK">USDNOK</option>
-<option value="USDDKK">USDDKK</option>
-<option value="USDSGD">USDSGD</option>
-<option value="USDHKD">USDHKD</option>
-<option value="USDCNH">USDCNH</option>
-<option value="USDPLN">USDPLN</option>
-<option value="USDRUB">USDRUB</option>
-<option value="USDTHB">USDTHB</option>
-<option value="USDINR">USDINR</option>
-</optgroup>
-<optgroup label="📊 شاخص‌ها">
-<option value="US30">US30 (داوجونز)</option>
-<option value="US100">US100 (نزدک)</option>
-<option value="US500">US500 (S&P)</option>
-<option value="US2000">US2000</option>
-<option value="GER40">GER40 (دکس)</option>
-<option value="UK100">UK100 (فوتسی)</option>
-<option value="FRA40">FRA40 (کک)</option>
-<option value="JPN225">JPN225 (نیکی)</option>
-<option value="AUS200">AUS200</option>
-<option value="HK50">HK50</option>
-<option value="CHINA50">CHINA50</option>
-<option value="ESP35">ESP35</option>
-</optgroup>
-<optgroup label="₿ کریپتو">
-<option value="BTCUSD">BTCUSD</option>
-<option value="ETHUSD">ETHUSD</option>
-<option value="LTCUSD">LTCUSD</option>
-<option value="XRPUSD">XRPUSD</option>
-<option value="BCHUSD">BCHUSD</option>
-<option value="ADAUSD">ADAUSD</option>
-<option value="DOTUSD">DOTUSD</option>
-<option value="SOLUSD">SOLUSD</option>
-<option value="DOGEUSD">DOGEUSD</option>
-<option value="LINKUSD">LINKUSD</option>
-<option value="AVAXUSD">AVAXUSD</option>
-<option value="MATICUSD">MATICUSD</option>
-</optgroup>
-<optgroup label="🛢️ انرژی">
-<option value="WTI">WTI</option>
-<option value="BRENT">BRENT</option>
-<option value="NATGAS">NATGAS</option>
-</optgroup>
-<optgroup label="🌾 کالاها">
-<option value="COPPER">COPPER (مس)</option>
-<option value="WHEAT">WHEAT (گندم)</option>
-<option value="CORN">CORN (ذرت)</option>
-<option value="COFFEE">COFFEE</option>
-<option value="SUGAR">SUGAR</option>
-<option value="COCOA">COCOA</option>
-</optgroup>
-</select>
-</div>
+<optgroup label="🥇 فلزات"><option value="XAUUSD">XAUUSD (طلا)</option><option value="XAGUSD">XAGUSD (نقره)</option><option value="XPTUSD">XPTUSD (پلاتین)</option><option value="XPDUSD">XPDUSD (پالادیوم)</option></optgroup>
+<optgroup label="💵 Majors"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="USDCHF">USDCHF</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="NZDUSD">NZDUSD</option></optgroup>
+<optgroup label="🔀 EUR Cross"><option value="EURGBP">EURGBP</option><option value="EURJPY">EURJPY</option><option value="EURCHF">EURCHF</option><option value="EURAUD">EURAUD</option><option value="EURCAD">EURCAD</option><option value="EURNZD">EURNZD</option></optgroup>
+<optgroup label="🔀 GBP Cross"><option value="GBPJPY">GBPJPY</option><option value="GBPCHF">GBPCHF</option><option value="GBPAUD">GBPAUD</option><option value="GBPCAD">GBPCAD</option><option value="GBPNZD">GBPNZD</option></optgroup>
+<optgroup label="🔀 JPY Cross"><option value="AUDJPY">AUDJPY</option><option value="CADJPY">CADJPY</option><option value="CHFJPY">CHFJPY</option><option value="NZDJPY">NZDJPY</option></optgroup>
+<optgroup label="🔀 Other Cross"><option value="AUDCAD">AUDCAD</option><option value="AUDCHF">AUDCHF</option><option value="AUDNZD">AUDNZD</option><option value="CADCHF">CADCHF</option><option value="NZDCAD">NZDCAD</option><option value="NZDCHF">NZDCHF</option></optgroup>
+<optgroup label="🌍 Exotic"><option value="USDTRY">USDTRY</option><option value="USDZAR">USDZAR</option><option value="USDMXN">USDMXN</option><option value="USDSEK">USDSEK</option><option value="USDNOK">USDNOK</option><option value="USDDKK">USDDKK</option><option value="USDSGD">USDSGD</option><option value="USDHKD">USDHKD</option><option value="USDCNH">USDCNH</option><option value="USDPLN">USDPLN</option><option value="USDRUB">USDRUB</option><option value="USDTHB">USDTHB</option><option value="USDINR">USDINR</option></optgroup>
+<optgroup label="📊 Indices"><option value="US30">US30</option><option value="US100">US100</option><option value="US500">US500</option><option value="US2000">US2000</option><option value="GER40">GER40</option><option value="UK100">UK100</option><option value="FRA40">FRA40</option><option value="JPN225">JPN225</option><option value="AUS200">AUS200</option><option value="HK50">HK50</option><option value="CHINA50">CHINA50</option><option value="ESP35">ESP35</option></optgroup>
+<optgroup label="₿ Crypto"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="LTCUSD">LTCUSD</option><option value="XRPUSD">XRPUSD</option><option value="BCHUSD">BCHUSD</option><option value="ADAUSD">ADAUSD</option><option value="DOTUSD">DOTUSD</option><option value="SOLUSD">SOLUSD</option><option value="DOGEUSD">DOGEUSD</option><option value="LINKUSD">LINKUSD</option><option value="AVAXUSD">AVAXUSD</option><option value="MATICUSD">MATICUSD</option></optgroup>
+<optgroup label="🛢️ Energy"><option value="WTI">WTI</option><option value="BRENT">BRENT</option><option value="NATGAS">NATGAS</option></optgroup>
+<optgroup label="🌾 Commodities"><option value="COPPER">COPPER</option><option value="WHEAT">WHEAT</option><option value="CORN">CORN</option><option value="COFFEE">COFFEE</option><option value="SUGAR">SUGAR</option><option value="COCOA">COCOA</option></optgroup>
+</select></div>
 <div class="fg"><label>سشن</label><select id="f_ses"><option value="London">لندن</option><option value="New York">نیویورک</option><option value="Asia">آسیا</option><option value="Overlap">همپوشانی</option></select></div>
 </div>
 <div class="fr">
@@ -458,107 +576,28 @@ tr:hover{background:var(--gold-glow)}
 <div class="fg"><label>ستاپ</label><select id="f_setup"><option value="OB+FVG">OB+FVG</option><option value="MTF">MTF</option><option value="Breakout">Breakout</option><option value="Liquidity">Liquidity</option><option value="Trend">Trend</option><option value="S&D">S&D</option><option value="Divergence">Divergence</option></select></div>
 <div class="fg"><label>🧠 روانشناسی</label>
 <select id="f_emo">
-<optgroup label="✅ حالت‌های حرفه‌ای">
-<option value="Plan">🎯 طبق پلان کامل</option>
-<option value="Patient">🧘 صبور و آرام</option>
-<option value="Disciplined">📏 با انضباط کامل</option>
-<option value="Risk Managed">🛡️ مدیریت ریسک عالی</option>
-<option value="Confident">💪 اعتماد به نفس منطقی</option>
-<option value="Focused">🎯 تمرکز کامل</option>
-<option value="Analytical">🧠 تحلیل عمیق</option>
-<option value="Waited Confirmation">⏳ منتظر تأیید ماند</option>
-</optgroup>
-<optgroup label="⚠️ اشتباهات عاطفی">
-<option value="FOMO">😰 FOMO (ترس از دست دادن)</option>
-<option value="Revenge">😡 معامله انتقامی</option>
-<option value="Greed">🤑 طمع (سود بیشتر)</option>
-<option value="Fear">😨 ترس (خروج زودهنگام)</option>
-<option value="Hope">🙏 امید واهی</option>
-<option value="Panic">😱 پنیک (فروش وحشتی)</option>
-<option value="Euphoria">🎉 سرخوشی (اعتماد بیش از حد)</option>
-<option value="Regret">😔 پشیمانی</option>
-<option value="Frustration">😤 ناامیدی و عصبانیت</option>
-</optgroup>
-<optgroup label="🚫 اشتباهات رفتاری">
-<option value="Overtrading">🔄 اورتردینگ (معاملات زیاد)</option>
-<option value="Overleveraging">⚖️ اهرم بیش از حد</option>
-<option value="No SL">❌ بدون حد ضرر</option>
-<option value="Moved SL">🔀 جابجایی SL به ضرر</option>
-<option value="Removed SL">🗑️ حذف حد ضرر</option>
-<option value="Early Exit">🚪 خروج زودهنگام</option>
-<option value="Late Entry">🐢 ورود دیرهنگام</option>
-<option value="Chasing Price">🏃 دنبال قیمت دویدن</option>
-<option value="Averaging Down">📉 میانگین‌گیری در ضرر</option>
-<option value="Ignored Plan">🙈 نادیده گرفتن پلان</option>
-<option value="No Analysis">🤷 بدون تحلیل</option>
-<option value="Copy Trade">👥 کپی از دیگران</option>
-</optgroup>
-<optgroup label="😴 حالت‌های ذهنی نامناسب">
-<option value="Fatigue">😪 خستگی</option>
-<option value="Distracted">📱 حواس‌پرتی</option>
-<option value="Emotional">💔 تصمیم احساسی</option>
-<option value="Impatient">⏱️ بی‌صبری</option>
-<option value="Boredom">😑 معامله از بیکاری</option>
-<option value="Stress">😰 استرس بالا</option>
-<option value="Sleep Deprived">😴 کم‌خوابی</option>
-<option value="Under Influence">🍺 تحت تأثیر مواد</option>
-</optgroup>
-<optgroup label="🎲 اشتباهات استراتژیک">
-<option value="News Trading">📰 معامله در خبر مهم</option>
-<option value="Against Trend">↩️ خلاف جهت روند</option>
-<option value="Low Timeframe">🔍 تایم فریم خیلی کوچک</option>
-<option value="Wrong Session">🌍 سشن نامناسب</option>
-<option value="No Confluence">❓ بدون همپوشانی سیگنال</option>
-<option value="Ignored HTF">📊 نادیده گرفتن تایم بالاتر</option>
-<option value="Bad Risk Reward">⚖️ ریسک به ریوارد ضعیف</option>
-<option value="Guessing">🎰 حدس زدن (شرط‌بندی)</option>
-</optgroup>
-</select>
-</div>
+<optgroup label="✅ حرفه‌ای"><option value="Plan">🎯 طبق پلان</option><option value="Patient">🧘 صبور</option><option value="Disciplined">📏 با انضباط</option><option value="Risk Managed">🛡️ مدیریت ریسک</option><option value="Confident">💪 اعتماد به نفس</option><option value="Focused">🎯 تمرکز</option><option value="Analytical">🧠 تحلیل</option><option value="Waited Confirmation">⏳ منتظر تأیید</option></optgroup>
+<optgroup label="⚠️ عاطفی"><option value="FOMO">😰 FOMO</option><option value="Revenge">😡 انتقامی</option><option value="Greed">🤑 طمع</option><option value="Fear">😨 ترس</option><option value="Hope">🙏 امید واهی</option><option value="Panic">😱 پنیک</option><option value="Euphoria">🎉 سرخوشی</option><option value="Regret">😔 پشیمانی</option><option value="Frustration">😤 عصبانیت</option></optgroup>
+<optgroup label="🚫 رفتاری"><option value="Overtrading">🔄 اورتردینگ</option><option value="Overleveraging">⚖️ اهرم زیاد</option><option value="No SL">❌ بدون SL</option><option value="Moved SL">🔀 جابجایی SL</option><option value="Removed SL">🗑️ حذف SL</option><option value="Early Exit">🚪 خروج زود</option><option value="Late Entry">🐢 ورود دیر</option><option value="Chasing Price">🏃 دنبال قیمت</option><option value="Averaging Down">📉 میانگین ضرر</option><option value="Ignored Plan">🙈 بی‌توجه به پلان</option><option value="No Analysis">🤷 بدون تحلیل</option><option value="Copy Trade">👥 کپی از دیگران</option></optgroup>
+<optgroup label="😴 ذهنی"><option value="Fatigue">😪 خستگی</option><option value="Distracted">📱 حواس‌پرتی</option><option value="Emotional">💔 احساسی</option><option value="Impatient">⏱️ بی‌صبری</option><option value="Boredom">😑 بیکاری</option><option value="Stress">😰 استرس</option><option value="Sleep Deprived">😴 کم‌خوابی</option><option value="Under Influence">🍺 تحت تأثیر</option></optgroup>
+<optgroup label="🎲 استراتژیک"><option value="News Trading">📰 معامله در خبر</option><option value="Against Trend">↩️ خلاف روند</option><option value="Low Timeframe">🔍 TF کوچک</option><option value="Wrong Session">🌍 سشن اشتباه</option><option value="No Confluence">❓ بدون همپوشانی</option><option value="Ignored HTF">📊 بی‌توجه به HTF</option><option value="Bad Risk Reward">⚖️ R:R ضعیف</option><option value="Guessing">🎰 حدس</option></optgroup>
+</select></div>
 </div>
 <div class="fr">
-<div class="fg"><label>کیفیت (1-10)</label><input type="number" id="f_qual" min="1" max="10" value="7"></div>
+<div class="fg"><label>کیفیت</label><input type="number" id="f_qual" min="1" max="10" value="7"></div>
 <div class="fg"><label>تایم‌فریم</label><select id="f_tf"><option value="M1">M1</option><option value="M5" selected>M5</option><option value="M15">M15</option><option value="M30">M30</option><option value="H1">H1</option><option value="H4">H4</option><option value="D1">D1</option><option value="W1">W1</option></select></div>
 </div>
 <div class="fg" style="margin-bottom:8px"><label>🔄 جابه‌جایی SL/TP</label><textarea id="f_slm" rows="1"></textarea></div>
 <div class="fg" style="margin-bottom:5px"><label>📋 نوع فرایند</label>
 <select id="f_proc">
-<option value="">انتخاب کنید (اختیاری)</option>
-<optgroup label="✅ اجرای صحیح">
-<option value="طبق پلان کامل اجرا شد">✅ طبق پلان کامل اجرا شد</option>
-<option value="ورود و خروج طبق استراتژی">✅ ورود و خروج طبق استراتژی</option>
-<option value="صبر برای تأیید کامل">✅ صبر برای تأیید کامل کندل</option>
-<option value="مدیریت ریسک صحیح">✅ مدیریت ریسک صحیح</option>
-</optgroup>
-<optgroup label="⚠️ اشتباهات اجرایی">
-<option value="ورود عالی، خروج زودهنگام">⚠️ ورود عالی، خروج زودهنگام</option>
-<option value="ورود خوب، مدیریت ضعیف">⚠️ ورود خوب، مدیریت ضعیف</option>
-<option value="ورود دیر، سود کم">⚠️ ورود دیرهنگام، سود کم</option>
-<option value="ورود بد، نتیجه شانسی">⚠️ ورود بد، نتیجه شانسی</option>
-<option value="SL جابجا کردم به ضرر بیشتر">⚠️ SL را جابجا کردم</option>
-<option value="TP رو دستکاری کردم">⚠️ TP رو دستکاری کردم</option>
-<option value="بدون SL معامله کردم">⚠️ بدون SL معامله کردم</option>
-</optgroup>
-<optgroup label="🚨 اشتباهات احساسی">
-<option value="کاملاً احساسی وارد شدم">🚨 کاملاً احساسی وارد شدم</option>
-<option value="بعد از ضرر قبلی وارد شدم">🚨 معامله انتقامی</option>
-<option value="فومو زدم دنبال قیمت">🚨 فومو زدم</option>
-<option value="طمع کردم برای سود بیشتر">🚨 طمع کردم</option>
-<option value="از ترس زود بستم">🚨 از ترس زود بستم</option>
-<option value="امید واهی داشتم">🚨 امید واهی داشتم</option>
-</optgroup>
-<optgroup label="💡 درس‌های آموزنده">
-<option value="باید صبر بیشتری می‌کردم">💡 باید صبر بیشتری می‌کردم</option>
-<option value="باید حجم کمتری می‌گرفتم">💡 باید حجم کمتری می‌گرفتم</option>
-<option value="نباید در این سشن وارد می‌شدم">💡 نباید در این سشن وارد می‌شدم</option>
-<option value="خبر مهم رو چک نکردم">💡 خبر مهم رو چک نکردم</option>
-<option value="تایم فریم بالاتر رو ندیدم">💡 تایم فریم بالاتر رو ندیدم</option>
-<option value="سطح مهم رو نادیده گرفتم">💡 سطح مهم رو نادیده گرفتم</option>
-</optgroup>
-</select>
-</div>
-<div class="fg" style="margin-bottom:8px"><label>📝 توضیحات فرایند (آزاد)</label><textarea id="f_life" rows="3" placeholder="هر آنچه می‌خواهید بنویسید..."></textarea></div>
-<div class="ssa" onclick="document.getElementById('ssIn').click()"><div style="color:var(--mut);font-size:.82rem">📷 آپلود اسکرین‌شات</div><img id="ssPr" style="display:none"><input type="file" id="ssIn" accept="image/*" style="display:none" onchange="handleSS(event)"></div>
+<option value="">انتخاب (اختیاری)</option>
+<optgroup label="✅ اجرای صحیح"><option value="طبق پلان کامل اجرا شد">✅ طبق پلان</option><option value="ورود و خروج طبق استراتژی">✅ طبق استراتژی</option><option value="صبر برای تأیید کامل">✅ صبر برای تأیید</option><option value="مدیریت ریسک صحیح">✅ مدیریت ریسک</option></optgroup>
+<optgroup label="⚠️ اجرایی"><option value="ورود عالی، خروج زودهنگام">⚠️ خروج زودهنگام</option><option value="ورود خوب، مدیریت ضعیف">⚠️ مدیریت ضعیف</option><option value="ورود دیر، سود کم">⚠️ ورود دیر</option><option value="ورود بد، نتیجه شانسی">⚠️ نتیجه شانسی</option><option value="SL جابجا کردم به ضرر بیشتر">⚠️ SL جابجا شد</option><option value="TP رو دستکاری کردم">⚠️ TP دستکاری</option><option value="بدون SL معامله کردم">⚠️ بدون SL</option></optgroup>
+<optgroup label="🚨 احساسی"><option value="کاملاً احساسی وارد شدم">🚨 احساسی</option><option value="بعد از ضرر قبلی وارد شدم">🚨 انتقامی</option><option value="فومو زدم دنبال قیمت">🚨 فومو</option><option value="طمع کردم برای سود بیشتر">🚨 طمع</option><option value="از ترس زود بستم">🚨 ترس</option><option value="امید واهی داشتم">🚨 امید واهی</option></optgroup>
+<optgroup label="💡 درس"><option value="باید صبر بیشتری می‌کردم">💡 صبر بیشتر</option><option value="باید حجم کمتری می‌گرفتم">💡 حجم کمتر</option><option value="نباید در این سشن وارد می‌شدم">💡 سشن اشتباه</option><option value="خبر مهم رو چک نکردم">💡 خبر</option><option value="تایم فریم بالاتر رو ندیدم">💡 HTF</option></optgroup>
+</select></div>
+<div class="fg" style="margin-bottom:8px"><label>📝 توضیحات</label><textarea id="f_life" rows="3"></textarea></div>
+<div class="ssa" onclick="document.getElementById('ssIn').click()"><div style="color:var(--mut);font-size:.82rem">📷 اسکرین‌شات</div><img id="ssPr" style="display:none"><input type="file" id="ssIn" accept="image/*" style="display:none" onchange="handleSS(event)"></div>
 <div class="fg" style="margin-bottom:8px"><label>🔗 لینک چارت</label><input type="url" id="f_link"></div>
 <button type="submit" id="subBtn" class="bsub">+ ثبت معامله</button>
 </form>
@@ -570,73 +609,452 @@ tr:hover{background:var(--gold-glow)}
 <div class="cc"><h3>🎯 وین‌ریت ستاپ</h3><div class="cs2"><canvas id="stCh"></canvas></div></div>
 </div>
 <div class="sgr">
-<div class="cc"><h3>💰 سود/زیان روزانه</h3><div class="cs2"><canvas id="daCh"></canvas></div></div>
+<div class="cc"><h3>💰 روزانه</h3><div class="cs2"><canvas id="daCh"></canvas></div></div>
 <div class="cc"><h3>📉 دراودان</h3><div class="cs2"><canvas id="ddCh"></canvas></div></div>
 </div>
 </div>
 </div>
 
-<div class="ca" id="archSec"><h3>🖼️ آرشیو چارت‌ها</h3><div class="ag" id="archGrid"></div></div>
+<div class="ca" id="archSec"><h3>🖼️ آرشیو</h3><div class="ag" id="archGrid"></div></div>
 
 <div class="tc">
 <div class="tcl">
 <input type="text" class="ts" id="tSch" placeholder="🔍 جستجو..." oninput="renderTable()">
-<select class="tf" id="tFT" onchange="renderTable()"><option value="ALL">همه انواع</option><option value="BUY">BUY</option><option value="SELL">SELL</option></select>
-<select class="tf" id="tFR" onchange="renderTable()"><option value="ALL">همه نتایج</option><option value="WIN">سودده</option><option value="LOSS">زیان‌ده</option></select>
-<select class="tf" id="tFS" onchange="renderTable()"><option value="ALL">همه نمادها</option></select>
-<span style="color:var(--mut);font-size:.82rem;margin-right:auto" id="tCnt">0 معامله</span>
+<select class="tf" id="tFT" onchange="renderTable()"><option value="ALL">همه</option><option value="BUY">BUY</option><option value="SELL">SELL</option></select>
+<select class="tf" id="tFR" onchange="renderTable()"><option value="ALL">همه</option><option value="WIN">سودده</option><option value="LOSS">زیان‌ده</option></select>
+<select class="tf" id="tFS" onchange="renderTable()"><option value="ALL">همه</option></select>
+<span style="color:var(--mut);font-size:.82rem;margin-right:auto" id="tCnt">0</span>
 </div>
-<table>
-<thead><tr>
-<th>#</th><th>تاریخ</th><th>ورود</th><th>خروج</th><th>مدت</th><th>نماد</th><th>نوع</th><th>ریسک</th><th>حجم (Lot)</th><th>Entry Price</th><th>SL</th><th>TP</th><th>Exit Price</th><th>سود/ضرر ($)</th><th>سود/ضرر (تومان)</th><th>DD</th><th>SL/TP</th><th>ستاپ</th><th>روانشناسی</th><th>فرایند</th><th>چارت</th><th>عملیات</th>
-</tr></thead>
-<tbody id="tBody"></tbody>
-</table>
+<table><thead><tr><th>#</th><th>تاریخ</th><th>ورود</th><th>خروج</th><th>مدت</th><th>نماد</th><th>نوع</th><th>ریسک</th><th>حجم</th><th>Entry</th><th>SL</th><th>TP</th><th>Exit</th><th>سود/ضرر ($)</th><th>سود/ضرر (تومان)</th><th>DD</th><th>SL/TP</th><th>ستاپ</th><th>روانشناسی</th><th>فرایند</th><th>چارت</th><th>عملیات</th></tr></thead><tbody id="tBody"></tbody></table>
 </div>
 </div>
 
 <script>
 let bk=null,curUser=null,ssData=null,eqCh,emCh,stCh,daCh,ddCh;
+let currentOTP={code:null,target:null,type:null,expires:null};
+
 const getU=()=>JSON.parse(localStorage.getItem('nlm_u'))||{};
 const svU=u=>localStorage.setItem('nlm_u',JSON.stringify(u));
 const getT=()=>curUser?JSON.parse(localStorage.getItem('nlm_t_'+curUser))||[]:[];
 const svT=t=>{if(curUser)localStorage.setItem('nlm_t_'+curUser,JSON.stringify(t))};
+const getProfile=(u)=>{const p=localStorage.getItem('nlm_pf_'+u);return p?JSON.parse(p):{}}
+const svProfile=(u,d)=>localStorage.setItem('nlm_pf_'+u,JSON.stringify(d))
+const getActivity=(u)=>JSON.parse(localStorage.getItem('nlm_act_'+u))||[]
+const logActivity=(u,action)=>{const a=getActivity(u);a.unshift({action,date:new persianDate().format('YYYY/MM/DD HH:mm')});if(a.length>50)a.length=50;localStorage.setItem('nlm_act_'+u,JSON.stringify(a))}
+const getConfig=()=>JSON.parse(localStorage.getItem('nlm_cfg'))||{};
+const svConfig=c=>localStorage.setItem('nlm_cfg',JSON.stringify(c));
 const toast=(m,t='tok')=>{const c=document.getElementById('toastC'),d=document.createElement('div');d.className=`tt ${t}`;d.textContent=m;c.appendChild(d);setTimeout(()=>d.remove(),3000)};
+const injectLogo=id=>{const tpl=document.getElementById('logoTpl'),t=document.getElementById(id);if(t&&tpl)t.innerHTML=tpl.innerHTML};
+const genOTP=()=>Math.floor(100000+Math.random()*900000).toString();
+const normalizePhone=p=>{p=(p||'').replace(/\D/g,'');if(p.startsWith('98'))p='0'+p.substring(2);if(p.startsWith('0098'))p='0'+p.substring(4);return p};
+const validatePhone=p=>/^09\d{9}$/.test(normalizePhone(p));
+const validateEmail=e=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 
-function injectLogo(id){const tpl=document.getElementById('logoTpl');const target=document.getElementById(id);if(target&&tpl)target.innerHTML=tpl.innerHTML}
+// Migrate old users
+function migrateUsers(){
+    const us=getU();let changed=false;
+    Object.keys(us).forEach(k=>{
+        if(!us[k].role){us[k].role=(k==='admin')?'admin':'user';changed=true}
+        if(!us[k].status){us[k].status='active';changed=true}
+        if(!us[k].created){us[k].created=new persianDate().format('YYYY/MM/DD');changed=true}
+        if(!us[k].loginCount)us[k].loginCount=0;
+    });
+    if(changed)svU(us);
+}
 
-function doReg(){const n=$('#rName').val().trim(),u=$('#rUser').val().trim(),p=$('#rPass').val().trim();if(!n||!u||!p){$('#rErr').text('همه الزامی').show();return}const us=getU();if(us[u]){$('#rErr').text('قبلاً ثبت شده').show();return}us[u]={name:n,pass:p};svU(us);toast('ثبت شد!');$('#regForm').hide();$('#loginForm').show()}
-function doLogin(){const u=$('#lUser').val().trim(),p=$('#lPass').val().trim(),us=getU();if(us[u]&&us[u].pass===p){curUser=u;localStorage.setItem('nlm_c',u);$('#authOverlay').fadeOut(400);$('#userBar').show();$('#curU').text(us[u].name||u);toast('خوش آمدید 🌙');renderAll()}else{$('#lErr').show();toast('خطا!','ter')}}
+// ===== OTP SENDING (Development Mode + Ready for Production) =====
+async function sendSMS(phone,code){
+    const cfg=getConfig();
+    // Production: If Kavenegar configured (via CORS proxy needed)
+    if(cfg.smsKey&&cfg.smsTpl){
+        try{
+            // NOTE: Direct Kavenegar API call blocked by CORS.
+            // For production, use a CORS proxy or Cloudflare Worker.
+            // Example endpoint (you must set up your own proxy):
+            // const r=await fetch(`https://your-proxy.com/kavenegar?key=${cfg.smsKey}&receptor=${phone}&token=${code}&template=${cfg.smsTpl}`);
+            console.log('SMS Production API would be called here');
+            return {success:false,dev:true,msg:'برای ارسال واقعی SMS، نیاز به CORS Proxy یا Backend دارید. کد در حالت توسعه نمایش داده می‌شود.'};
+        }catch(e){return{success:false,dev:true,msg:e.message}}
+    }
+    return {success:false,dev:true,msg:'حالت توسعه: کد در صفحه نمایش داده می‌شود'};
+}
+
+async function sendEmail(email,code){
+    const cfg=getConfig();
+    if(cfg.emailSvc&&cfg.emailTpl&&cfg.emailKey&&typeof emailjs!=='undefined'){
+        try{
+            emailjs.init(cfg.emailKey);
+            await emailjs.send(cfg.emailSvc,cfg.emailTpl,{to_email:email,otp_code:code,user_email:email,message:`کد تایید NilmahRise: ${code}`});
+            return {success:true};
+        }catch(e){console.error(e);return{success:false,dev:true,msg:'خطای EmailJS: '+(e.text||e.message)}}
+    }
+    return {success:false,dev:true,msg:'EmailJS تنظیم نشده - کد در صفحه نمایش داده می‌شود'};
+}
+
+function showDevOTP(containerId,code){
+    $('#'+containerId).html(`<div class="dev-otp-box"><div style="font-size:.75rem;color:var(--mut)">🔧 حالت توسعه - کد شما:</div><div class="dev-otp-code">${code}</div><button class="dev-otp-copy" onclick="navigator.clipboard.writeText('${code}');toast('کپی شد','tin')">📋 کپی</button></div>`);
+}
+
+// ===== SWITCH LOGIN METHOD =====
+function switchLoginMethod(m){
+    $('.auth-tab').removeClass('auth-tab-active');
+    $('#lmt-'+m).addClass('auth-tab-active');
+    $('.login-method').hide();
+    $('#login'+m.charAt(0).toUpperCase()+m.slice(1)).css('display','flex').css('flex-direction','column').css('gap','10px');
+    $('#lErr,#lOk').hide();
+}
+
+// ===== PHONE LOGIN =====
+async function sendPhoneOTP(mode){
+    const phone=normalizePhone($('#lPhone').val());
+    if(!validatePhone(phone)){toast('شماره نامعتبر (09xxxxxxxxx)','ter');return}
+    
+    // Check if user exists (for login)
+    const us=getU();
+    let userKey=null;
+    Object.keys(us).forEach(k=>{const pf=getProfile(k);if(pf.phone&&normalizePhone(pf.phone)===phone&&pf.phoneVerified)userKey=k});
+    if(!userKey){$('#lErr').text('این شماره ثبت‌نام نشده یا احراز نشده').show();toast('شماره یافت نشد','ter');return}
+    
+    const code=genOTP();
+    currentOTP={code,target:phone,type:'phone',expires:Date.now()+300000,userKey};
+    $('#lPhoneBtn').text('⏳ در حال ارسال...').prop('disabled',true);
+    const r=await sendSMS(phone,code);
+    $('#lPhoneBtn').text('📩 ارسال مجدد').prop('disabled',false);
+    $('#lPhoneOtpArea').css('display','flex').css('flex-direction','column').css('gap','10px');
+    if(r.dev)showDevOTP('lPhoneDevOtp',code);
+    toast('✅ کد ارسال شد','tok');
+    setupOTPInputs('#lPhoneOtpArea .otp-digit');
+}
+
+function resendPhoneOTP(mode){sendPhoneOTP(mode)}
+
+function verifyPhoneOTP(mode){
+    const inputs=$('#lPhoneOtpArea .otp-digit');
+    let code='';inputs.each(function(){code+=$(this).val()});
+    if(code.length!==6){toast('کد ۶ رقمی وارد کنید','ter');return}
+    if(Date.now()>currentOTP.expires){toast('کد منقضی شد','ter');return}
+    if(code!==currentOTP.code){toast('کد اشتباه!','ter');return}
+    // Login
+    const us=getU();
+    const uk=currentOTP.userKey;
+    if(us[uk].status==='banned'){toast('حساب مسدود!','ter');return}
+    if(us[uk].status==='suspended'){toast('حساب معلق!','twa');return}
+    us[uk].loginCount=(us[uk].loginCount||0)+1;
+    us[uk].lastLogin=new Date().toISOString();
+    svU(us);
+    curUser=uk;
+    localStorage.setItem('nlm_c',uk);
+    $('#authOverlay').fadeOut(400);
+    $('#userBar').show();
+    $('#curU').text(us[uk].name||uk);
+    logActivity(uk,'ورود با شماره تلفن');
+    toast('خوش آمدید 🌙');
+    renderAll();
+}
+
+// ===== EMAIL LOGIN =====
+async function sendEmailOTP(mode){
+    const email=$('#lEmail').val().trim();
+    if(!validateEmail(email)){toast('ایمیل نامعتبر','ter');return}
+    const us=getU();
+    let userKey=null;
+    Object.keys(us).forEach(k=>{const pf=getProfile(k);if(pf.email&&pf.email.toLowerCase()===email.toLowerCase()&&pf.emailVerified)userKey=k});
+    if(!userKey){$('#lErr').text('این ایمیل ثبت‌نام نشده یا احراز نشده').show();toast('ایمیل یافت نشد','ter');return}
+    const code=genOTP();
+    currentOTP={code,target:email,type:'email',expires:Date.now()+300000,userKey};
+    $('#lEmailBtn').text('⏳ ارسال...').prop('disabled',true);
+    const r=await sendEmail(email,code);
+    $('#lEmailBtn').text('📩 ارسال مجدد').prop('disabled',false);
+    $('#lEmailOtpArea').css('display','flex').css('flex-direction','column').css('gap','10px');
+    if(r.dev)showDevOTP('lEmailDevOtp',code);
+    else toast('✅ ایمیل ارسال شد','tok');
+    setupOTPInputs('#lEmailOtpArea .otp-digit');
+}
+function resendEmailOTP(mode){sendEmailOTP(mode)}
+function verifyEmailOTP(mode){
+    const inputs=$('#lEmailOtpArea .otp-digit');
+    let code='';inputs.each(function(){code+=$(this).val()});
+    if(code.length!==6){toast('کد ۶ رقمی وارد کنید','ter');return}
+    if(Date.now()>currentOTP.expires){toast('کد منقضی','ter');return}
+    if(code!==currentOTP.code){toast('کد اشتباه','ter');return}
+    const us=getU(),uk=currentOTP.userKey;
+    if(us[uk].status==='banned'){toast('حساب مسدود','ter');return}
+    if(us[uk].status==='suspended'){toast('حساب معلق','twa');return}
+    us[uk].loginCount=(us[uk].loginCount||0)+1;
+    us[uk].lastLogin=new Date().toISOString();
+    svU(us);
+    curUser=uk;localStorage.setItem('nlm_c',uk);
+    $('#authOverlay').fadeOut(400);$('#userBar').show();$('#curU').text(us[uk].name||uk);
+    logActivity(uk,'ورود با ایمیل');
+    toast('خوش آمدید 🌙');renderAll();
+}
+
+function setupOTPInputs(sel){
+    $(sel).off('input keydown').on('input',function(e){
+        if(this.value.length===1){$(this).next('.otp-digit').focus()}
+    }).on('keydown',function(e){
+        if(e.key==='Backspace'&&!this.value){$(this).prev('.otp-digit').focus()}
+    });
+    $(sel).first().focus();
+}
+
+function doLogin(){
+    const u=$('#lUser').val().trim(),p=$('#lPass').val().trim(),us=getU();
+    if(!us[u]){$('#lErr').text('کاربر یافت نشد').show();return}
+    if(us[u].pass!==p){$('#lErr').text('رمز اشتباه').show();return}
+    if(us[u].status==='banned'){$('#lErr').text('🚫 حساب مسدود').show();return}
+    if(us[u].status==='suspended'){$('#lErr').text('⏸️ حساب معلق').show();return}
+    us[u].loginCount=(us[u].loginCount||0)+1;
+    us[u].lastLogin=new Date().toISOString();svU(us);
+    curUser=u;localStorage.setItem('nlm_c',u);
+    $('#authOverlay').fadeOut(400);$('#userBar').show();$('#curU').text(us[u].name||u);
+    logActivity(u,'ورود با رمز');
+    toast('خوش آمدید 🌙');renderAll();
+}
+
+function doReg(){
+    const n=$('#rName').val().trim(),u=$('#rUser').val().trim(),p=$('#rPass').val().trim(),ph=normalizePhone($('#rPhone').val()),em=$('#rEmail').val().trim();
+    if(!n){$('#rErr').text('نام الزامی').show();return}
+    if(!u||u.length<3){$('#rErr').text('نام کاربری حداقل ۳ کاراکتر').show();return}
+    if(!p||p.length<4){$('#rErr').text('رمز حداقل ۴ کاراکتر').show();return}
+    const us=getU();
+    if(us[u]){$('#rErr').text('این نام کاربری قبلاً ثبت شده').show();return}
+    if(ph&&!validatePhone(ph)){$('#rErr').text('شماره تلفن نامعتبر').show();return}
+    if(em&&!validateEmail(em)){$('#rErr').text('ایمیل نامعتبر').show();return}
+    // Check duplicate phone/email
+    let dup=false;
+    Object.keys(us).forEach(k=>{const pf=getProfile(k);if(ph&&pf.phone&&normalizePhone(pf.phone)===ph)dup='phone';if(em&&pf.email&&pf.email.toLowerCase()===em.toLowerCase())dup='email'});
+    if(dup){$('#rErr').text(`این ${dup==='phone'?'شماره':'ایمیل'} قبلاً استفاده شده`).show();return}
+    
+    us[u]={name:n,pass:p,role:'user',status:'active',created:new persianDate().format('YYYY/MM/DD'),loginCount:0};
+    svU(us);
+    if(ph||em)svProfile(u,{phone:ph||'',email:em||'',phoneVerified:false,emailVerified:false});
+    logActivity(u,'ثبت‌نام');
+    toast('✅ ثبت‌نام موفق! برای ورود با شماره/ایمیل، ابتدا در پنل احراز کنید');
+    $('#regForm').hide();$('#loginForm').show();$('#lUser').val(u);
+}
+
 function doLogout(){curUser=null;localStorage.removeItem('nlm_c');location.reload()}
-function handleSS(e){const f=e.target.files[0];if(!f)return;if(f.size>2*1024*1024){toast('حداکثر ۲MB!','twa');return}const r=new FileReader();r.onload=ev=>{ssData=ev.target.result;document.getElementById('ssPr').src=ssData;document.getElementById('ssPr').style.display='block'};r.readAsDataURL(f)}
+function handleSS(e){const f=e.target.files[0];if(!f)return;if(f.size>2*1024*1024){toast('حداکثر ۲MB','twa');return}const r=new FileReader();r.onload=ev=>{ssData=ev.target.result;document.getElementById('ssPr').src=ssData;document.getElementById('ssPr').style.display='block'};r.readAsDataURL(f)}
 function showLB(id){const t=getT().find(x=>x.id===id);if(t&&t.screenshot){document.getElementById('lbImg').src=t.screenshot;document.getElementById('lightbox').style.display='flex'}}
-
 function calcDuration(et,xt){if(!et||!xt||et==='-'||xt==='-')return '-';try{const[eh,em]=et.split(':').map(Number);const[xh,xm]=xt.split(':').map(Number);let mins=(xh*60+xm)-(eh*60+em);if(mins<0)mins+=1440;if(mins===0)return '0m';const h=Math.floor(mins/60),m=mins%60;return h>0?`${h}h ${m}m`:`${m}m`}catch(e){return '-'}}
 
+// ===== USER MANAGEMENT =====
+function openUserMgmt(){
+    if(!curUser){toast('ابتدا وارد شوید','twa');return}
+    const us=getU(),isAdmin=us[curUser]&&us[curUser].role==='admin';
+    $('#tab-users,#tab-smsconfig').css('display',isAdmin?'block':'none');
+    loadProfileTab();switchTab('profile');
+    $('#userMgmtM').css('display','flex');
+}
+function switchTab(t){
+    $('.um-tab').removeClass('um-tab-active');
+    $('.um-pane').hide();
+    $('#tab-'+t).addClass('um-tab-active');
+    $('#pane-'+t).show();
+    if(t==='users')renderUsersList();
+    if(t==='activity')loadActivityTab();
+    if(t==='verify')loadVerifyTab();
+    if(t==='smsconfig')loadConfigTab();
+    if(t==='security')$('#sec_curPass,#sec_newUname,#sec_newPass,#sec_newPass2').val();
+}
+function loadProfileTab(){
+    const us=getU(),user=us[curUser],pf=getProfile(curUser);
+    $('#pf_uname').val(curUser);$('#pf_name').val(user.name||'');
+    $('#pf_bio').val(pf.bio||'');$('#pf_style').val(pf.style||'Day Trader');$('#pf_exp').val(pf.exp||'Intermediate');
+    $('#userAvatar').text((user.name||curUser).charAt(0).toUpperCase());
+    $('#userRole').text(user.role==='admin'?'👑 ادمین':'👤 کاربر').css('color',user.role==='admin'?'var(--gold)':'var(--blue)');
+}
+function saveProfile(){
+    const us=getU(),name=$('#pf_name').val().trim();
+    if(!name){toast('نام الزامی','ter');return}
+    us[curUser].name=name;svU(us);
+    const pf=getProfile(curUser);pf.bio=$('#pf_bio').val().trim();pf.style=$('#pf_style').val();pf.exp=$('#pf_exp').val();svProfile(curUser,pf);
+    $('#curU').text(name);
+    logActivity(curUser,'ویرایش پروفایل');toast('✅ ذخیره شد');loadProfileTab();
+}
+
+// ===== VERIFY TAB =====
+function loadVerifyTab(){
+    const pf=getProfile(curUser);
+    $('#v_phone').val(pf.phone||'');
+    $('#v_email').val(pf.email||'');
+    $('#vPhoneStatus').html(pf.phoneVerified?'<span class="verified">✅ احراز شده</span>':(pf.phone?'<span class="unverified">⚠️ نیاز به احراز</span>':'شماره ثبت نشده'));
+    $('#vEmailStatus').html(pf.emailVerified?'<span class="verified">✅ احراز شده</span>':(pf.email?'<span class="unverified">⚠️ نیاز به احراز</span>':'ایمیل ثبت نشده'));
+    $('#vPhoneOtpArea,#vEmailOtpArea').hide();
+}
+
+async function sendVerifyPhoneOTP(){
+    const phone=normalizePhone($('#v_phone').val());
+    if(!validatePhone(phone)){toast('شماره نامعتبر','ter');return}
+    const us=getU();let dup=null;
+    Object.keys(us).forEach(k=>{if(k===curUser)return;const pf=getProfile(k);if(pf.phone&&normalizePhone(pf.phone)===phone)dup=k});
+    if(dup){toast('این شماره متعلق به کاربر دیگر است','ter');return}
+    const code=genOTP();
+    currentOTP={code,target:phone,type:'verify-phone',expires:Date.now()+300000};
+    $('#vPhoneBtn').text('⏳...').prop('disabled',true);
+    const r=await sendSMS(phone,code);
+    $('#vPhoneBtn').text('📩 ارسال مجدد').prop('disabled',false);
+    $('#vPhoneOtpArea').show();
+    if(r.dev)showDevOTP('vPhoneDevOtp',code);
+    toast('✅ کد ارسال شد');
+    $('#vPhoneCode').val('').focus();
+}
+function confirmVerifyPhone(){
+    const code=$('#vPhoneCode').val().trim();
+    if(code.length!==6){toast('کد ۶ رقمی','ter');return}
+    if(Date.now()>currentOTP.expires){toast('کد منقضی','ter');return}
+    if(code!==currentOTP.code){toast('کد اشتباه','ter');return}
+    const pf=getProfile(curUser);pf.phone=currentOTP.target;pf.phoneVerified=true;svProfile(curUser,pf);
+    logActivity(curUser,'احراز شماره تلفن');
+    toast('✅ شماره احراز شد!');loadVerifyTab();
+}
+async function sendVerifyEmailOTP(){
+    const email=$('#v_email').val().trim();
+    if(!validateEmail(email)){toast('ایمیل نامعتبر','ter');return}
+    const us=getU();let dup=null;
+    Object.keys(us).forEach(k=>{if(k===curUser)return;const pf=getProfile(k);if(pf.email&&pf.email.toLowerCase()===email.toLowerCase())dup=k});
+    if(dup){toast('این ایمیل متعلق به کاربر دیگر است','ter');return}
+    const code=genOTP();
+    currentOTP={code,target:email,type:'verify-email',expires:Date.now()+300000};
+    $('#vEmailBtn').text('⏳...').prop('disabled',true);
+    const r=await sendEmail(email,code);
+    $('#vEmailBtn').text('📩 ارسال مجدد').prop('disabled',false);
+    $('#vEmailOtpArea').show();
+    if(r.dev)showDevOTP('vEmailDevOtp',code);
+    else toast('✅ ایمیل ارسال شد');
+    $('#vEmailCode').val('').focus();
+}
+function confirmVerifyEmail(){
+    const code=$('#vEmailCode').val().trim();
+    if(code.length!==6){toast('کد ۶ رقمی','ter');return}
+    if(Date.now()>currentOTP.expires){toast('کد منقضی','ter');return}
+    if(code!==currentOTP.code){toast('کد اشتباه','ter');return}
+    const pf=getProfile(curUser);pf.email=currentOTP.target;pf.emailVerified=true;svProfile(curUser,pf);
+    logActivity(curUser,'احراز ایمیل');
+    toast('✅ ایمیل احراز شد!');loadVerifyTab();
+}
+
+// ===== USERS TAB (ADMIN) =====
+function renderUsersList(){
+    const us=getU(),search=($('#userSearch').val()||'').toLowerCase();
+    const list=$('#usersList');list.empty();
+    const keys=Object.keys(us).filter(k=>{if(!search)return true;const u=us[k];return k.toLowerCase().includes(search)||(u.name||'').toLowerCase().includes(search)});
+    $('#usersCnt').text(`${keys.length}/${Object.keys(us).length} کاربر`);
+    keys.forEach(k=>{
+        const u=us[k],pf=getProfile(k),trades=(JSON.parse(localStorage.getItem('nlm_t_'+k))||[]).length;
+        const initial=(u.name||k).charAt(0).toUpperCase();
+        const statusClass='st-'+(u.status||'active');
+        const statusText={active:'✅ فعال',suspended:'⏸️ معلق',banned:'🚫 مسدود'}[u.status||'active'];
+        const roleClass='role-'+(u.role||'user');
+        const roleText=u.role==='admin'?'👑 ادمین':'👤 کاربر';
+        const isSelf=k===curUser;
+        list.append(`<div class="user-item"><div class="user-avatar">${initial}</div><div class="user-info"><div class="un">${u.name||'-'} <span class="role-badge ${roleClass}">${roleText}</span> <span class="status-badge ${statusClass}">${statusText}</span>${isSelf?' <span style="color:var(--gold);font-size:.7rem">(شما)</span>':''}</div><div class="um-info">👤 ${k} | 📊 ${trades} معامله | 🔑 ${u.loginCount||0} ورود | 📅 ${u.created||'-'}${pf.email?' | ✉️ '+pf.email+(pf.emailVerified?' ✅':' ⚠️'):''}${pf.phone?' | 📱 '+pf.phone+(pf.phoneVerified?' ✅':' ⚠️'):''}</div></div><div style="display:flex;gap:5px;flex-wrap:wrap"><button class="be2" onclick="editUser('${k}')">✏️</button>${!isSelf?`<button class="bh" onclick="toggleUserStatus('${k}')" style="color:#f59e0b;border-color:#f59e0b;padding:4px 8px;font-size:.75rem">🔄</button>`:''}${!isSelf?`<button class="bd" onclick="deleteUserByAdmin('${k}')">🗑️</button>`:''}</div></div>`);
+    });
+    if(!keys.length)list.html('<div style="text-align:center;color:var(--mut);padding:20px">یافت نشد</div>');
+}
+function openAddUser(){$('#userFormTitle').text('➕ افزودن');$('#uf_editKey').val('');$('#uf_name,#uf_uname,#uf_pass,#uf_email,#uf_phone').val('');$('#uf_role').val('user');$('#uf_status').val('active');$('#uf_uname').prop('readonly',false);$('#userForm').show()}
+function editUser(k){const us=getU(),u=us[k],pf=getProfile(k);$('#userFormTitle').text(`✏️ ${k}`);$('#uf_editKey').val(k);$('#uf_name').val(u.name||'');$('#uf_uname').val(k).prop('readonly',true);$('#uf_pass').val(u.pass||'');$('#uf_role').val(u.role||'user');$('#uf_status').val(u.status||'active');$('#uf_email').val(pf.email||'');$('#uf_phone').val(pf.phone||'');$('#userForm').show()}
+function saveUser(){
+    const ek=$('#uf_editKey').val(),name=$('#uf_name').val().trim(),uname=$('#uf_uname').val().trim(),pass=$('#uf_pass').val().trim();
+    if(!name||!uname||!pass){toast('فیلدهای الزامی','ter');return}
+    if(uname.length<3){toast('نام کاربری کوتاه','ter');return}
+    if(pass.length<4){toast('رمز کوتاه','ter');return}
+    const us=getU();if(!ek&&us[uname]){toast('نام کاربری تکراری','ter');return}
+    const key=ek||uname;
+    us[key]={name,pass,role:$('#uf_role').val(),status:$('#uf_status').val(),created:us[key]?us[key].created:new persianDate().format('YYYY/MM/DD'),loginCount:us[key]?us[key].loginCount:0,lastLogin:us[key]?us[key].lastLogin:null};
+    svU(us);
+    const pf=getProfile(key);pf.email=$('#uf_email').val().trim();pf.phone=normalizePhone($('#uf_phone').val());svProfile(key,pf);
+    logActivity(curUser,ek?`ویرایش ${key}`:`ایجاد ${key}`);
+    toast('✅ ذخیره شد');$('#userForm').hide();renderUsersList();
+}
+function toggleUserStatus(k){
+    const us=getU(),cur=us[k].status||'active',next={active:'suspended',suspended:'banned',banned:'active'}[cur];
+    const lbl={active:'✅ فعال',suspended:'⏸️ معلق',banned:'🚫 مسدود'};
+    if(confirm(`تغییر "${k}" از "${lbl[cur]}" به "${lbl[next]}"؟`)){us[k].status=next;svU(us);logActivity(curUser,`تغییر ${k} به ${next}`);renderUsersList();toast('✅ تغییر کرد','tin')}
+}
+function deleteUserByAdmin(k){
+    if(k===curUser){toast('نمی‌توانید خود را حذف کنید','ter');return}
+    if(!confirm(`⚠️ کاربر "${k}" و داده‌هایش حذف شود؟`))return;
+    if(!confirm(`مطمئنید؟`))return;
+    const us=getU();delete us[k];svU(us);
+    localStorage.removeItem('nlm_t_'+k);localStorage.removeItem('nlm_pf_'+k);localStorage.removeItem('nlm_act_'+k);
+    logActivity(curUser,`حذف ${k}`);renderUsersList();toast('حذف شد','twa');
+}
+
+// ===== SECURITY =====
+$(document).on('input','#sec_newPass',function(){
+    const p=$(this).val();if(!p){$('#passStrength').hide();return}
+    let s=0,m='',c='';if(p.length>=4)s++;if(p.length>=8)s++;if(/[A-Z]/.test(p))s++;if(/[0-9]/.test(p))s++;if(/[^A-Za-z0-9]/.test(p))s++;
+    if(s<=2){m='🔴 ضعیف';c='var(--red)'}else if(s<=3){m='🟡 متوسط';c='#f59e0b'}else if(s<=4){m='🟢 خوب';c='var(--green)'}else{m='💎 عالی';c='var(--gold)'}
+    $('#passStrength').show().text('قدرت: '+m).css({background:c+'22',color:c,border:'1px solid '+c});
+});
+function changeCredentials(){
+    const cur=$('#sec_curPass').val(),nu=$('#sec_newUname').val().trim(),np=$('#sec_newPass').val(),np2=$('#sec_newPass2').val();
+    const us=getU();
+    if(!cur){toast('رمز فعلی الزامی','ter');return}
+    if(us[curUser].pass!==cur){toast('رمز فعلی اشتباه','ter');return}
+    if(!nu&&!np){toast('حداقل یک فیلد','twa');return}
+    if(np){if(np.length<4){toast('رمز جدید کوتاه','ter');return}if(np!==np2){toast('تکرار اشتباه','ter');return}us[curUser].pass=np}
+    if(nu&&nu!==curUser){
+        if(nu.length<3){toast('نام کاربری کوتاه','ter');return}
+        if(us[nu]){toast('نام کاربری تکراری','ter');return}
+        us[nu]={...us[curUser]};delete us[curUser];
+        ['nlm_t_','nlm_pf_','nlm_act_'].forEach(pre=>{const v=localStorage.getItem(pre+curUser);if(v){localStorage.setItem(pre+nu,v);localStorage.removeItem(pre+curUser)}});
+        curUser=nu;localStorage.setItem('nlm_c',nu);$('#curU').text(us[nu].name||nu);
+    }
+    svU(us);logActivity(curUser,'تغییر اطلاعات ورود');toast('✅ تغییر یافت - لطفاً دوباره وارد شوید');
+    setTimeout(()=>doLogout(),1500);
+}
+function deleteMyAccount(){
+    if(!confirm('⚠️ حساب و همه داده‌ها حذف شود؟'))return;
+    const c=prompt('عبارت "حذف حساب" را تایپ کنید:');if(c!=='حذف حساب'){toast('لغو','tin');return}
+    const us=getU();delete us[curUser];svU(us);
+    ['nlm_t_','nlm_pf_','nlm_act_'].forEach(p=>localStorage.removeItem(p+curUser));
+    localStorage.removeItem('nlm_c');toast('حذف شد','twa');setTimeout(()=>location.reload(),1000);
+}
+
+// ===== ACTIVITY =====
+function loadActivityTab(){
+    const us=getU(),u=us[curUser],trades=(JSON.parse(localStorage.getItem('nlm_t_'+curUser))||[]).length;
+    $('#act_total').text(trades);$('#act_regDate').text(u.created||'-');$('#act_loginCnt').text(u.loginCount||0);
+    if(u.lastLogin){try{$('#act_lastLogin').text(new persianDate(new Date(u.lastLogin)).format('YYYY/MM/DD HH:mm'))}catch(e){$('#act_lastLogin').text('-')}}
+    const acts=getActivity(curUser),box=$('#activityLog');box.empty();
+    if(!acts.length){box.html('<div style="text-align:center;color:var(--mut)">فعالیتی ثبت نشده</div>');return}
+    acts.forEach(a=>box.append(`<div style="padding:8px 10px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between"><span>${a.action}</span><span style="color:var(--mut);font-size:.75rem">${a.date}</span></div>`));
+}
+
+// ===== CONFIG (Admin) =====
+function loadConfigTab(){const c=getConfig();$('#cfg_smsKey').val(c.smsKey||'');$('#cfg_smsTpl').val(c.smsTpl||'');$('#cfg_emailSvc').val(c.emailSvc||'');$('#cfg_emailTpl').val(c.emailTpl||'');$('#cfg_emailKey').val(c.emailKey||'')}
+function saveConfig(){const c={smsKey:$('#cfg_smsKey').val().trim(),smsTpl:$('#cfg_smsTpl').val().trim(),emailSvc:$('#cfg_emailSvc').val().trim(),emailTpl:$('#cfg_emailTpl').val().trim(),emailKey:$('#cfg_emailKey').val().trim()};svConfig(c);toast('✅ ذخیره شد')}
+
 $(document).ready(function(){
+    migrateUsers();
     injectLogo('logoAuth');injectLogo('logoHeader');
     $("#f_date").persianDatepicker({format:'YYYY/MM/DD',initialValue:true,autoClose:true});
-    const us=getU();if(!us['admin']){us['admin']={name:'ادمین',pass:'admin'};svU(us)}
+    const us=getU();if(!us['admin']){us['admin']={name:'ادمین',pass:'admin',role:'admin',status:'active',created:new persianDate().format('YYYY/MM/DD'),loginCount:0};svU(us)}
     const s=localStorage.getItem('nlm_c');if(s&&us[s]){curUser=s;$('#authOverlay').hide();$('#userBar').show();$('#curU').text(us[s].name||s)}
-    
     $('#f_proc').on('change',function(){const v=$(this).val();if(v){const cur=$('#f_life').val();$('#f_life').val(cur?(cur+'\n'+v):v);$(this).val('')}});
-    
     $('#tradeForm').on('submit',function(e){
         e.preventDefault();const eid=$('#editId').val();
         const td={date:$('#f_date').val(),entryTime:$('#f_et').val(),exitTime:$('#f_xt').val(),symbol:$('#f_sym').val(),session:$('#f_ses').val(),type:$('#f_type').val(),riskPct:parseFloat($('#f_risk').val())||1,lot:parseFloat($('#f_lot').val())||.01,entry:parseFloat($('#f_entry').val())||0,sl:parseFloat($('#f_sl').val())||0,tp:parseFloat($('#f_tp').val())||0,tpReal:parseFloat($('#f_tpR').val())||0,pnl:parseFloat($('#f_pnl').val())||0,setup:$('#f_setup').val(),emotion:$('#f_emo').val(),lifecycle:$('#f_life').val(),sltpMove:$('#f_slm').val(),chartLink:$('#f_link').val(),entryQuality:parseInt($('#f_qual').val())||7,timeframe:$('#f_tf').val(),screenshot:ssData||null};
         let T=getT();
-        if(eid){T=T.map(t=>{if(t.id==eid){const u={...t,...td};if(!ssData&&t.screenshot)u.screenshot=t.screenshot;return u}return t});$('#editId').val('');$('#subBtn').text('+ ثبت');$('#fT').text('✏️ ثبت معامله جدید');toast('ویرایش شد!','tin')}
-        else{td.id=Date.now();T.unshift(td);toast('ثبت شد!')}
+        if(eid){T=T.map(t=>{if(t.id==eid){const u={...t,...td};if(!ssData&&t.screenshot)u.screenshot=t.screenshot;return u}return t});$('#editId').val('');$('#subBtn').text('+ ثبت');$('#fT').text('✏️ ثبت جدید');toast('ویرایش شد','tin')}
+        else{td.id=Date.now();T.unshift(td);toast('ثبت شد')}
         ssData=null;document.getElementById('ssPr').style.display='none';svT(T);this.reset();$('#f_date').val(new persianDate().format('YYYY/MM/DD'));$('#f_risk').val('1.0');$('#f_lot').val('0.01');$('#f_qual').val('7');renderAll()});
     $('#f_date').val(new persianDate().format('YYYY/MM/DD'));
-    const st=localStorage.getItem('nlm_th')||'dark';setTheme(st);$('#thS').val(st);renderAll()});
+    const st=localStorage.getItem('nlm_th')||'dark';setTheme(st);$('#thS').val(st);renderAll();
+    // Auto-populate emotion filter
+    const emos=['ALL','Plan','Patient','FOMO','Revenge','Greed','Fear','Overtrading','Hope','No SL','Moved SL','Early Exit'];
+    const eSel=$('#rptE');eSel.empty();emos.forEach(e=>eSel.append(`<option value="${e}">${e==='ALL'?'همه':e}</option>`));
+});
 
 const getCap=()=>parseFloat($('#capIn').val())||100;
 const getRate=()=>parseFloat($('#usdtIn').val())||186000;
 function renderAll(){renderKPIs();renderIns();renderStrk();renderTable();renderCharts();renderArch();checkDD();updSF()}
 function updSF(){const T=getT(),s=[...new Set(T.map(t=>t.symbol))],f=$('#tFS'),v=f.val();f.find('option:not(:first)').remove();s.forEach(x=>f.append(`<option value="${x}">${x}</option>`));if(v&&s.includes(v))f.val(v)}
 function popRF(){const T=getT();$('#rptSy').find('option:not(:first)').remove();[...new Set(T.map(t=>t.symbol))].forEach(x=>$('#rptSy').append(`<option value="${x}">${x}</option>`));$('#rptS').find('option:not(:first)').remove();[...new Set(T.map(t=>t.setup))].forEach(x=>$('#rptS').append(`<option value="${x}">${x}</option>`))}
-function checkDD(){const T=getT(),today=new persianDate().format('YYYY/MM/DD'),tp=T.filter(t=>t.date===today).reduce((s,t)=>s+t.pnl,0),lim=getCap()*(parseFloat($('#ddIn').val())||5)/100;if(tp<0&&Math.abs(tp)>=lim*.7){$('#riskAlert').css('display','flex');$('#riskTxt').text(`⚠️ ضرر امروز: $${Math.abs(tp).toFixed(2)}`)}else $('#riskAlert').hide()}
+function checkDD(){const T=getT(),td=new persianDate().format('YYYY/MM/DD'),tp=T.filter(t=>t.date===td).reduce((s,t)=>s+t.pnl,0),lim=getCap()*(parseFloat($('#ddIn').val())||5)/100;if(tp<0&&Math.abs(tp)>=lim*.7){$('#riskAlert').css('display','flex');$('#riskTxt').text(`⚠️ ضرر امروز: $${Math.abs(tp).toFixed(2)}`)}else $('#riskAlert').hide()}
 
 function renderKPIs(){const T=getT(),n=T.length,ur=getRate();let w=0,tp=0,tl=0,mw=0,ml=0,tr=0,rc=0;
 T.forEach(t=>{const pnl=parseFloat(t.pnl)||0;if(pnl>0){w++;tp+=pnl;if(pnl>mw)mw=pnl}else if(pnl<0){tl+=Math.abs(pnl);if(pnl<ml)ml=pnl}if(t.entry&&t.sl&&t.tp){const rd=Math.abs(t.entry-t.sl),rw=Math.abs(t.tp-t.entry);if(rd>0){tr+=rw/rd;rc++}}});
@@ -658,33 +1076,10 @@ const dp={};T.forEach(t=>{dp[t.date]=(dp[t.date]||0)+(parseFloat(t.pnl)||0)});
 let fl=T.filter(t=>{const pn=parseFloat(t.pnl)||0;if(ft!=='ALL'&&t.type!==ft)return false;if(fr==='WIN'&&pn<=0)return false;if(fr==='LOSS'&&pn>=0)return false;if(fs!=='ALL'&&t.symbol!==fs)return false;if(st&&!`${t.symbol} ${t.setup} ${t.emotion} ${t.lifecycle||''}`.toLowerCase().includes(st))return false;return true});
 $('#tCnt').text(`${fl.length}/${T.length} معامله`);
 fl.forEach((t,i)=>{
-    const pnl=parseFloat(t.pnl)||0;
-    const tm2=pnl*ur;
-    const iv=dp[t.date]<0&&Math.abs(dp[t.date])>=cap*(md/100);
+    const pnl=parseFloat(t.pnl)||0;const tm2=pnl*ur;const iv=dp[t.date]<0&&Math.abs(dp[t.date])>=cap*(md/100);
     const lp=(t.lifecycle||'-').substring(0,35)+((t.lifecycle||'').length>35?'…':'');
     const dur=calcDuration(t.entryTime,t.exitTime);
-    tb.append(`<tr>
-<td style="color:var(--mut)">${i+1}</td>
-<td>${t.date}</td>
-<td>${t.entryTime||'-'}</td>
-<td>${t.exitTime||'-'}</td>
-<td>${dur!=='-'?`<span class="duration-tag">${dur}</span>`:'-'}</td>
-<td><b>${t.symbol}</b></td>
-<td>${t.type==='BUY'?'<span class="bb2">BUY</span>':'<span class="bs3">SELL</span>'}</td>
-<td>${t.riskPct}%</td>
-<td style="color:var(--gold);font-weight:700">${t.lot}</td>
-<td>${t.entry||'-'}</td><td>${t.sl||'-'}</td><td>${t.tp||'-'}</td>
-<td style="color:var(--cyan)">${t.tpReal||'-'}</td>
-<td style="color:${pnl>=0?'var(--green)':'var(--red)'};font-weight:700">${pnl>=0?'+':''}$${pnl.toFixed(2)}</td>
-<td style="color:${pnl>=0?'var(--green)':'var(--red)'};font-size:.76rem">${pnl>=0?'+':''}${Math.round(tm2).toLocaleString()} ت</td>
-<td>${iv?'<span class="bv">⚠️</span>':'<span class="bsf">✓</span>'}</td>
-<td style="font-size:.75rem;max-width:110px;white-space:normal">${(t.sltpMove||'-').substring(0,30)}</td>
-<td style="font-size:.75rem">${t.setup}</td>
-<td style="font-size:.75rem">${t.emotion}</td>
-<td style="font-size:.74rem;max-width:130px;white-space:normal;line-height:1.4" title="${(t.lifecycle||'').replace(/"/g,'&quot;')}">${lp}</td>
-<td>${t.screenshot?`<span style="cursor:pointer;font-size:1.1rem" onclick="showLB(${t.id})">🖼️</span>`:''}${t.chartLink?` <a href="${t.chartLink}" target="_blank" style="color:var(--blue)">🔗</a>`:''}</td>
-<td style="white-space:nowrap"><button class="be2" onclick="editT(${t.id})">✏️</button> <button class="bdu2" onclick="dupT(${t.id})">📋</button> <button class="bd" onclick="delT(${t.id})">🗑️</button></td>
-</tr>`)})}
+    tb.append(`<tr><td style="color:var(--mut)">${i+1}</td><td>${t.date}</td><td>${t.entryTime||'-'}</td><td>${t.exitTime||'-'}</td><td>${dur!=='-'?`<span class="duration-tag">${dur}</span>`:'-'}</td><td><b>${t.symbol}</b></td><td>${t.type==='BUY'?'<span class="bb2">BUY</span>':'<span class="bs3">SELL</span>'}</td><td>${t.riskPct}%</td><td style="color:var(--gold);font-weight:700">${t.lot}</td><td>${t.entry||'-'}</td><td>${t.sl||'-'}</td><td>${t.tp||'-'}</td><td style="color:var(--cyan)">${t.tpReal||'-'}</td><td style="color:${pnl>=0?'var(--green)':'var(--red)'};font-weight:700">${pnl>=0?'+':''}$${pnl.toFixed(2)}</td><td style="color:${pnl>=0?'var(--green)':'var(--red)'};font-size:.76rem">${pnl>=0?'+':''}${Math.round(tm2).toLocaleString()} ت</td><td>${iv?'<span class="bv">⚠️</span>':'<span class="bsf">✓</span>'}</td><td style="font-size:.75rem;max-width:110px;white-space:normal">${(t.sltpMove||'-').substring(0,30)}</td><td style="font-size:.75rem">${t.setup}</td><td style="font-size:.75rem">${t.emotion}</td><td style="font-size:.74rem;max-width:130px;white-space:normal;line-height:1.4" title="${(t.lifecycle||'').replace(/"/g,'&quot;')}">${lp}</td><td>${t.screenshot?`<span style="cursor:pointer;font-size:1.1rem" onclick="showLB(${t.id})">🖼️</span>`:''}${t.chartLink?` <a href="${t.chartLink}" target="_blank" style="color:var(--blue)">🔗</a>`:''}</td><td style="white-space:nowrap"><button class="be2" onclick="editT(${t.id})">✏️</button> <button class="bdu2" onclick="dupT(${t.id})">📋</button> <button class="bd" onclick="delT(${t.id})">🗑️</button></td></tr>`)})}
 
 function renderArch(){const T=getT(),g=$('#archGrid');g.empty();const wm=T.filter(t=>t.screenshot||t.chartLink);if(!wm.length){$('#archSec').hide();return}$('#archSec').show();
 wm.forEach(t=>{const pnl=parseFloat(t.pnl)||0;const pc=pnl>=0?'var(--green)':'var(--red)',pb=pnl>=0?'rgba(74,222,128,.15)':'rgba(248,113,113,.15)';const dur=calcDuration(t.entryTime,t.exitTime);
@@ -694,11 +1089,10 @@ function editT(id){const T=getT(),t=T.find(x=>x.id==id);if(!t)return;
 $('#editId').val(t.id);$('#f_sym').val(t.symbol);$('#f_ses').val(t.session);$('#f_date').val(t.date);$('#f_et').val(t.entryTime||'');$('#f_xt').val(t.exitTime||'');$('#f_type').val(t.type);$('#f_risk').val(t.riskPct);$('#f_lot').val(t.lot);$('#f_pnl').val(t.pnl);$('#f_entry').val(t.entry);$('#f_sl').val(t.sl);$('#f_tp').val(t.tp);$('#f_tpR').val(t.tpReal||'');$('#f_setup').val(t.setup);$('#f_emo').val(t.emotion);$('#f_life').val(t.lifecycle||'');$('#f_slm').val(t.sltpMove||'');$('#f_link').val(t.chartLink||'');$('#f_qual').val(t.entryQuality||7);$('#f_tf').val(t.timeframe||'M5');
 if(t.screenshot){ssData=null;document.getElementById('ssPr').src=t.screenshot;document.getElementById('ssPr').style.display='block'}else document.getElementById('ssPr').style.display='none';
 $('#subBtn').text('💾 ذخیره');$('#fT').text('✏️ ویرایش');window.scrollTo({top:0,behavior:'smooth'})}
-
-function dupT(id){const T=getT(),t=T.find(x=>x.id==id);if(!t)return;T.unshift({...t,id:Date.now()});svT(T);renderAll();toast('کپی!','tin')}
+function dupT(id){const T=getT(),t=T.find(x=>x.id==id);if(!t)return;T.unshift({...t,id:Date.now()});svT(T);renderAll();toast('کپی','tin')}
 function delT(id){if(!confirm('حذف؟'))return;let T=getT();T=T.filter(t=>t.id!==id);svT(T);renderAll();toast('حذف','tin')}
-function clearAll(){if(confirm('⚠️ پاکسازی؟')){bk=[...getT()];svT([]);renderAll();$('#btnR').show();toast('پاک شد','twa')}}
-function restore(){if(bk){svT(bk);bk=null;renderAll();$('#btnR').hide();toast('بازگردانی!')}}
+function clearAll(){if(confirm('پاکسازی؟')){bk=[...getT()];svT([]);renderAll();$('#btnR').show();toast('پاک شد','twa')}}
+function restore(){if(bk){svT(bk);bk=null;renderAll();$('#btnR').hide();toast('بازگردانی')}}
 function setTheme(t){document.body.className=t==='dark'?'':`t-${t}`;localStorage.setItem('nlm_th',t)}
 
 function renderCharts(){const T=getT(),cap=getCap();let eq=cap;const el=['شروع'],ed=[cap],so=[...T].reverse();so.forEach((t,i)=>{eq+=(parseFloat(t.pnl)||0);el.push(`#${i+1}`);ed.push(eq)});
@@ -722,100 +1116,50 @@ function importMT5(e){
     const f=e.target.files[0];if(!f)return;
     const fn=f.name.toLowerCase(),r=new FileReader();
     if(fn.endsWith('.xlsx')||fn.endsWith('.xls')){
-        r.onload=function(ev){
-            try{const d=new Uint8Array(ev.target.result);const wb=XLSX.read(d,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const json=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});parseMT5(json)}
-            catch(err){toast('خطا: '+err.message,'ter');console.error(err)}
-        };
+        r.onload=function(ev){try{const d=new Uint8Array(ev.target.result);const wb=XLSX.read(d,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const json=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});parseMT5(json)}catch(err){toast('خطا','ter');console.error(err)}};
         r.readAsArrayBuffer(f);return;
     }
     r.onload=function(ev){
         const c=ev.target.result;
         if(c.includes('<table')||c.includes('<TABLE')){
-            const p=new DOMParser(),doc=p.parseFromString(c,'text/html');
-            const allRows=[];
+            const p=new DOMParser(),doc=p.parseFromString(c,'text/html');const allRows=[];
             doc.querySelectorAll('tr').forEach(row=>{const cells=[];row.querySelectorAll('td,th').forEach(c=>cells.push((c.innerText||c.textContent||'').trim()));if(cells.length)allRows.push(cells)});
             parseMT5(allRows);
-        }else{
-            const lines=c.split('\n'),rows=[];
-            lines.forEach(l=>{if(l.trim())rows.push(l.split(/[,;\t]/).map(x=>x.trim().replace(/^"|"$/g,'')))});
-            parseMT5(rows);
-        }
+        }else{const lines=c.split('\n'),rows=[];lines.forEach(l=>{if(l.trim())rows.push(l.split(/[,;\t]/).map(x=>x.trim().replace(/^"|"$/g,'')))});parseMT5(rows)}
     };
     r.readAsText(f);
 }
 
 function parseMT5(rows){
-    if(!rows||!rows.length){toast('فایل خالی','ter');return}
-    console.log('===== MT5 Import =====');
+    if(!rows||!rows.length){toast('خالی','ter');return}
     const num=(v)=>{if(v===undefined||v===null||v==='')return 0;let s=(v+'').toString().trim().replace(/\s+/g,'').replace(/\u00A0/g,'').replace(/,(?=\d{3})/g,'').replace(/[^\d.\-]/g,'');const n=parseFloat(s);return isNaN(n)?0:n};
     const parseDT=(v)=>{if(!v)return{date:null,time:null};const s=(v+'').toString().trim();let date=null,time=null;const dm=s.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);if(dm){try{date=new persianDate(new Date(parseInt(dm[1]),parseInt(dm[2])-1,parseInt(dm[3]))).format('YYYY/MM/DD')}catch(e){}}const tm=s.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);if(tm)time=tm[1].padStart(2,'0')+':'+tm[2];return{date,time}};
-    
     let dealsStart=-1,dealsEnd=rows.length;
     for(let i=0;i<rows.length;i++){const rt=(rows[i]||[]).filter(c=>c).join(' ').toLowerCase().trim();if(rt==='deals'||rt.startsWith('deals ')){dealsStart=i;break}}
-    if(dealsStart<0){toast('❌ بخش Deals در فایل نیست!','ter');return}
+    if(dealsStart<0){toast('❌ Deals نیست','ter');return}
     for(let i=dealsStart+1;i<rows.length;i++){const rt=(rows[i]||[]).filter(c=>c).join(' ').toLowerCase().trim();if(rt.includes('summary')||(rt.includes('total')&&rt.length<30)){dealsEnd=i;break}}
-    
     let hdrIdx=-1,hdrCells=null;
     for(let i=dealsStart;i<Math.min(dealsStart+10,dealsEnd);i++){const cells=rows[i];if(!cells)continue;const lc=cells.map(c=>(c+'').toLowerCase().trim());if(lc.includes('symbol')&&lc.includes('direction')&&lc.includes('volume')&&lc.includes('profit')){hdrIdx=i;hdrCells=lc;break}}
-    if(hdrIdx<0){toast('❌ ستون‌های Deals یافت نشد','ter');return}
-    
-    const col={};
-    hdrCells.forEach((c,idx)=>{if(c==='time')col.time=idx;else if(c==='deal')col.deal=idx;else if(c==='symbol')col.symbol=idx;else if(c==='type')col.type=idx;else if(c==='direction')col.direction=idx;else if(c==='volume'||c==='lots')col.volume=idx;else if(c==='price')col.price=idx;else if(c==='order')col.order=idx;else if(c==='commission')col.commission=idx;else if(c==='fee')col.fee=idx;else if(c==='swap')col.swap=idx;else if(c==='profit')col.profit=idx;else if(c==='balance')col.balance=idx;else if(c==='comment')col.comment=idx});
-    
+    if(hdrIdx<0){toast('❌ ستون‌ها نیست','ter');return}
+    const col={};hdrCells.forEach((c,idx)=>{if(c==='time')col.time=idx;else if(c==='deal')col.deal=idx;else if(c==='symbol')col.symbol=idx;else if(c==='type')col.type=idx;else if(c==='direction')col.direction=idx;else if(c==='volume'||c==='lots')col.volume=idx;else if(c==='price')col.price=idx;else if(c==='order')col.order=idx;else if(c==='commission')col.commission=idx;else if(c==='fee')col.fee=idx;else if(c==='swap')col.swap=idx;else if(c==='profit')col.profit=idx;else if(c==='comment')col.comment=idx});
     const deals=[];
-    for(let i=hdrIdx+1;i<dealsEnd;i++){
-        const row=rows[i];if(!row||row.length<5)continue;
-        const rowText=row.join(' ').toLowerCase();
-        if(rowText.includes('balance')&&!rowText.includes('buy')&&!rowText.includes('sell'))continue;
-        if(rowText.includes('deposit')||rowText.includes('withdrawal'))continue;
-        const typeVal=(row[col.type]||'').toString().toLowerCase().trim();
-        if(typeVal!=='buy'&&typeVal!=='sell')continue;
-        const direction=(row[col.direction]||'').toString().toLowerCase().trim();
-        if(direction!=='in'&&direction!=='out')continue;
-        const dt=parseDT(row[col.time]);
-        deals.push({time:dt.time,date:dt.date,symbol:(row[col.symbol]||'').toString().trim(),type:typeVal,direction:direction,volume:num(row[col.volume]),price:num(row[col.price]),order:(row[col.order]||'').toString().trim(),commission:col.commission!==undefined?num(row[col.commission]):0,fee:col.fee!==undefined?num(row[col.fee]):0,swap:col.swap!==undefined?num(row[col.swap]):0,profit:col.profit!==undefined?num(row[col.profit]):0,comment:col.comment!==undefined?(row[col.comment]||'').toString().trim():''});
-    }
-    
-    let posStart=-1,posEnd=dealsStart;
-    for(let i=0;i<dealsStart;i++){const rt=(rows[i]||[]).filter(c=>c).join(' ').toLowerCase().trim();if(rt==='positions'){posStart=i;break}}
-    const positionsMap={};
+    for(let i=hdrIdx+1;i<dealsEnd;i++){const row=rows[i];if(!row||row.length<5)continue;const rt=row.join(' ').toLowerCase();if(rt.includes('balance')&&!rt.includes('buy')&&!rt.includes('sell'))continue;if(rt.includes('deposit')||rt.includes('withdrawal'))continue;const tv=(row[col.type]||'').toString().toLowerCase().trim();if(tv!=='buy'&&tv!=='sell')continue;const dr=(row[col.direction]||'').toString().toLowerCase().trim();if(dr!=='in'&&dr!=='out')continue;const dt=parseDT(row[col.time]);deals.push({time:dt.time,date:dt.date,symbol:(row[col.symbol]||'').toString().trim(),type:tv,direction:dr,volume:num(row[col.volume]),price:num(row[col.price]),order:(row[col.order]||'').toString().trim(),commission:col.commission!==undefined?num(row[col.commission]):0,fee:col.fee!==undefined?num(row[col.fee]):0,swap:col.swap!==undefined?num(row[col.swap]):0,profit:col.profit!==undefined?num(row[col.profit]):0,comment:col.comment!==undefined?(row[col.comment]||'').toString().trim():''})}
+    let posStart=-1;for(let i=0;i<dealsStart;i++){const rt=(rows[i]||[]).filter(c=>c).join(' ').toLowerCase().trim();if(rt==='positions'){posStart=i;break}}
+    const posMap={};
     if(posStart>=0){
         let posHdr=-1,posHdrCells=null;
-        for(let i=posStart;i<Math.min(posStart+10,posEnd);i++){const cells=rows[i];if(!cells)continue;const lc=cells.map(c=>(c+'').toLowerCase().trim());if(lc.includes('symbol')&&lc.includes('position')&&lc.includes('type')){posHdr=i;posHdrCells=lc;break}}
-        if(posHdr>=0){
-            const pCol={};let priceCount=0,timeCount=0;
-            posHdrCells.forEach((c,idx)=>{if(c==='time'){if(timeCount===0)pCol.openTime=idx;else pCol.closeTime=idx;timeCount++}else if(c==='position')pCol.position=idx;else if(c==='symbol')pCol.symbol=idx;else if(c==='type')pCol.type=idx;else if(c==='volume')pCol.volume=idx;else if(c==='price'){if(priceCount===0)pCol.openPrice=idx;else pCol.closePrice=idx;priceCount++}else if(c==='s / l'||c==='s/l'||c==='sl')pCol.sl=idx;else if(c==='t / p'||c==='t/p'||c==='tp')pCol.tp=idx});
-            for(let i=posHdr+1;i<posEnd;i++){const row=rows[i];if(!row||row.length<5)continue;const posId=(row[pCol.position]||'').toString().trim();if(!posId||!/^\d+$/.test(posId))continue;const sl=pCol.sl!==undefined&&row[pCol.sl]?num(row[pCol.sl]):0;const tp=pCol.tp!==undefined&&row[pCol.tp]?num(row[pCol.tp]):0;positionsMap[posId]={sl,tp}}
-        }
+        for(let i=posStart;i<Math.min(posStart+10,dealsStart);i++){const cells=rows[i];if(!cells)continue;const lc=cells.map(c=>(c+'').toLowerCase().trim());if(lc.includes('symbol')&&lc.includes('position')&&lc.includes('type')){posHdr=i;posHdrCells=lc;break}}
+        if(posHdr>=0){const pCol={};let pc=0,tc=0;posHdrCells.forEach((c,idx)=>{if(c==='time'){if(tc===0)pCol.openTime=idx;else pCol.closeTime=idx;tc++}else if(c==='position')pCol.position=idx;else if(c==='symbol')pCol.symbol=idx;else if(c==='volume')pCol.volume=idx;else if(c==='price'){if(pc===0)pCol.openPrice=idx;else pCol.closePrice=idx;pc++}else if(c==='s / l'||c==='s/l'||c==='sl')pCol.sl=idx;else if(c==='t / p'||c==='t/p'||c==='tp')pCol.tp=idx});for(let i=posHdr+1;i<dealsStart;i++){const row=rows[i];if(!row||row.length<5)continue;const posId=(row[pCol.position]||'').toString().trim();if(!posId||!/^\d+$/.test(posId))continue;const sl=pCol.sl!==undefined&&row[pCol.sl]?num(row[pCol.sl]):0;const tp=pCol.tp!==undefined&&row[pCol.tp]?num(row[pCol.tp]):0;posMap[posId]={sl,tp}}}
     }
-    
-    const openPositions=[],finalTrades=[];
-    deals.sort((a,b)=>{const ta=(a.date||'')+' '+(a.time||'');const tb=(b.date||'')+' '+(b.time||'');return ta.localeCompare(tb)});
-    
-    deals.forEach(d=>{
-        if(d.direction==='in'){openPositions.push(d)}
-        else if(d.direction==='out'){
-            let matchIdx=-1;
-            for(let i=0;i<openPositions.length;i++){if(openPositions[i].symbol===d.symbol&&openPositions[i].volume===d.volume){matchIdx=i;break}}
-            if(matchIdx<0){for(let i=0;i<openPositions.length;i++){if(openPositions[i].symbol===d.symbol){matchIdx=i;break}}}
-            if(matchIdx>=0){
-                const inDeal=openPositions[matchIdx];openPositions.splice(matchIdx,1);
-                const netProfit=d.profit+d.commission+d.fee+d.swap+inDeal.commission+inDeal.fee+inDeal.swap;
-                const symbolClean=inDeal.symbol.toUpperCase().replace(/\.(ECN|M|MICRO|PRO|RAW|C|MINI|STD)$/i,'').replace(/[^A-Z0-9]/g,'');
-                let sl=0,tp=0;
-                if(positionsMap[inDeal.order]){sl=positionsMap[inDeal.order].sl;tp=positionsMap[inDeal.order].tp}
-                finalTrades.push({id:Date.now()+Math.random(),date:inDeal.date||new persianDate().format('YYYY/MM/DD'),entryTime:inDeal.time||'',exitTime:d.time||'',symbol:symbolClean,session:'London',type:inDeal.type==='buy'?'BUY':'SELL',riskPct:1,lot:inDeal.volume,entry:inDeal.price,sl:sl,tp:tp,tpReal:d.price,pnl:netProfit,setup:'OB+FVG',emotion:'Plan',lifecycle:`از MT5 وارد شد | Order: ${inDeal.order}`+(d.comment?` | ${d.comment}`:''),sltpMove:'',chartLink:'',entryQuality:5,timeframe:'M5',screenshot:null});
-            }
-        }
-    });
-    
-    if(finalTrades.length){let T=getT();T=[...finalTrades,...T];svT(T);renderAll();toast(`✅ ${finalTrades.length} معامله وارد شد!`)}
-    else{toast('❌ معامله‌ای یافت نشد','ter')}
+    const openP=[],finalT=[];
+    deals.sort((a,b)=>{const ta=(a.date||'')+' '+(a.time||''),tb=(b.date||'')+' '+(b.time||'');return ta.localeCompare(tb)});
+    deals.forEach(d=>{if(d.direction==='in')openP.push(d);else if(d.direction==='out'){let mi=-1;for(let i=0;i<openP.length;i++){if(openP[i].symbol===d.symbol&&openP[i].volume===d.volume){mi=i;break}}if(mi<0)for(let i=0;i<openP.length;i++){if(openP[i].symbol===d.symbol){mi=i;break}}if(mi>=0){const inD=openP[mi];openP.splice(mi,1);const np=d.profit+d.commission+d.fee+d.swap+inD.commission+inD.fee+inD.swap;const sc=inD.symbol.toUpperCase().replace(/\.(ECN|M|MICRO|PRO|RAW|C|MINI|STD)$/i,'').replace(/[^A-Z0-9]/g,'');let sl=0,tp=0;if(posMap[inD.order]){sl=posMap[inD.order].sl;tp=posMap[inD.order].tp}finalT.push({id:Date.now()+Math.random(),date:inD.date||new persianDate().format('YYYY/MM/DD'),entryTime:inD.time||'',exitTime:d.time||'',symbol:sc,session:'London',type:inD.type==='buy'?'BUY':'SELL',riskPct:1,lot:inD.volume,entry:inD.price,sl:sl,tp:tp,tpReal:d.price,pnl:np,setup:'OB+FVG',emotion:'Plan',lifecycle:`از MT5 | Order:${inD.order}`+(d.comment?` | ${d.comment}`:''),sltpMove:'',chartLink:'',entryQuality:5,timeframe:'M5',screenshot:null})}}});
+    if(finalT.length){let T=getT();T=[...finalT,...T];svT(T);renderAll();toast(`✅ ${finalT.length} معامله وارد شد`)}else toast('❌ یافت نشد','ter');
 }
 
-function exportCSV(){const T=getT(),ur=getRate();let csv="#,تاریخ,ورود,خروج,مدت,نماد,نوع,ریسک,حجم,Entry,SL,TP,Exit,PnL$,PnLتومان,ستاپ,روانشناسی\n";T.forEach((t,i)=>{const d=calcDuration(t.entryTime,t.exitTime);csv+=`${i+1},${t.date},${t.entryTime},${t.exitTime||''},${d},${t.symbol},${t.type},${t.riskPct},${t.lot},${t.entry},${t.sl},${t.tp},${t.tpReal||''},${t.pnl},${Math.round((parseFloat(t.pnl)||0)*ur)},${t.setup},${t.emotion}\n`});const l=document.createElement("a");l.href=encodeURI("data:text/csv;charset=utf-8,\uFEFF"+csv);l.download=`NilmahRise_${new persianDate().format('YYYY-MM-DD')}.csv`;l.click();toast('دانلود شد!')}
+function exportCSV(){const T=getT(),ur=getRate();let csv="#,تاریخ,ورود,خروج,مدت,نماد,نوع,ریسک,حجم,Entry,SL,TP,Exit,PnL$,PnLتومان,ستاپ,روانشناسی\n";T.forEach((t,i)=>{const d=calcDuration(t.entryTime,t.exitTime);csv+=`${i+1},${t.date},${t.entryTime},${t.exitTime||''},${d},${t.symbol},${t.type},${t.riskPct},${t.lot},${t.entry},${t.sl},${t.tp},${t.tpReal||''},${t.pnl},${Math.round((parseFloat(t.pnl)||0)*ur)},${t.setup},${t.emotion}\n`});const l=document.createElement("a");l.href=encodeURI("data:text/csv;charset=utf-8,\uFEFF"+csv);l.download=`NilmahRise_${new persianDate().format('YYYY-MM-DD')}.csv`;l.click();toast('دانلود شد')}
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('.mo').hide();$('#lightbox').hide()}})
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('.mo').hide();$('#lightbox').hide()}});
 </script>
 </body>
 </html>
