@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NilmahRise Pro Trading Journal</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
+<script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+<style>
+:root{--bg:#000;--bg2:#0a0a0a;--card:#111;--card2:#161616;--brd:#1f1f1f;--brd2:#2a2a2a;--inp:#0d0d0d;--gold:#e8c988;--gold2:#d4b16a;--gold3:#f5e5bc;--gold-glow:rgba(232,201,136,.15);--green:#4ade80;--red:#f87171;--blue:#60a5fa;--purple:#a78bfa;--cyan:#67e8f9;--txt:#fff;--txt2:#e5e5e5;--mut:#8a8a8a;--mut2:#6a6a6a;--glow:0 0 40px rgba(232,201,136,.08)}
+body.t-light{--bg:#f5f7fa;--bg2:#fff;--card:#fff;--card2:#f8fafc;--brd:#e2e8f0;--brd2:#cbd5e1;--inp:#f8fafc;--gold:#0284c7;--gold2:#0369a1;--gold3:#0ea5e9;--gold-glow:rgba(2,132,199,.12);--green:#059669;--red:#dc2626;--blue:#2563eb;--purple:#7c3aed;--cyan:#0891b2;--txt:#0f172a;--txt2:#334155;--mut:#64748b;--mut2:#94a3b8;--glow:0 4px 20px rgba(15,23,42,.06)}
+body.t-ocean{--bg:#0a192f;--bg2:#0d2340;--card:#112240;--card2:#152a4a;--brd:#233554;--brd2:#2d4266;--inp:#0d1e35;--gold:#64ffda;--gold2:#4fd1c5;--gold-glow:rgba(100,255,218,.15);--green:#10b981;--red:#f43f5e;--blue:#38bdf8;--purple:#a855f7;--cyan:#22d3ee;--txt:#e6f1ff;--txt2:#ccd6f6;--mut:#8892b0;--mut2:#64748b}
+body.t-royal{--bg:#13111c;--bg2:#1a1727;--card:#1f1b2e;--card2:#252035;--brd:#2d2843;--brd2:#3a3454;--inp:#181524;--gold:#c084fc;--gold2:#a855f7;--gold-glow:rgba(192,132,252,.15);--green:#34d399;--red:#fb7185;--blue:#60a5fa;--purple:#c084fc;--cyan:#67e8f9;--txt:#f3e8ff;--txt2:#e9d5ff;--mut:#9b8cae;--mut2:#7a6d8f}
+body.t-emerald{--bg:#0a1f14;--bg2:#0f2a1c;--card:#132e21;--card2:#1a3a2b;--brd:#1f4530;--brd2:#2a5540;--inp:#0d2618;--gold:#34d399;--gold2:#10b981;--gold-glow:rgba(52,211,153,.15);--green:#6ee7b7;--red:#fca5a5;--blue:#7dd3fc;--purple:#c084fc;--cyan:#67e8f9;--txt:#ecfdf5;--txt2:#d1fae5;--mut:#86b7a3;--mut2:#5e8a7b}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;transition:background .3s,color .2s,border-color .2s}
+body{background:var(--bg);color:var(--txt);padding:16px;direction:rtl;min-height:100vh;font-size:14px}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 20% 10%,var(--gold-glow),transparent 60%),radial-gradient(ellipse at 80% 90%,var(--gold-glow),transparent 50%);pointer-events:none;z-index:0;opacity:.5}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--gold2)}
+
+.nlm-logo{position:relative;display:inline-block;filter:drop-shadow(0 0 15px rgba(232,201,136,.4))}
+@keyframes float3D{0%,100%{transform:translateY(0) rotateY(0deg)}50%{transform:translateY(-8px) rotateY(3deg)}}
+@keyframes glowMoon{0%,100%{filter:drop-shadow(0 0 6px rgba(255,213,120,.6))}50%{filter:drop-shadow(0 0 18px rgba(255,213,120,.9))}}
+@keyframes candlePump{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.08)}}
+@keyframes candlePump2{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.92)}}
+@keyframes arrowGlide{0%,100%{transform:translate(0,0)}50%{transform:translate(2px,-3px)}}
+@keyframes nileFlow1{0%,100%{d:path("M 130 320 Q 170 305 210 315 T 290 305 T 340 315")}50%{d:path("M 130 315 Q 170 320 210 305 T 290 315 T 340 305")}}
+@keyframes nileFlow2{0%,100%{d:path("M 120 335 Q 160 320 200 330 T 280 320 T 340 330")}50%{d:path("M 120 330 Q 160 335 200 320 T 280 330 T 340 320")}}
+@keyframes waveBottom1{0%,100%{d:path("M 40 500 Q 90 485 140 495 T 240 485 T 360 495")}50%{d:path("M 40 495 Q 90 500 140 485 T 240 495 T 360 485")}}
+@keyframes waveBottom2{0%,100%{d:path("M 40 515 Q 90 500 140 510 T 240 500 T 360 510")}50%{d:path("M 40 510 Q 90 515 140 500 T 240 510 T 360 500")}}
+@keyframes waveBottom3{0%,100%{d:path("M 40 528 Q 90 515 140 525 T 240 515 T 360 525")}50%{d:path("M 40 523 Q 90 528 140 515 T 240 525 T 360 515")}}
+@keyframes waveBottom4{0%,100%{d:path("M 40 540 Q 90 530 140 538 T 240 530 T 360 538")}50%{d:path("M 40 536 Q 90 540 140 530 T 240 538 T 360 530")}}
+@keyframes ringSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes sparkleTwinkle{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.4)}}
+@keyframes shimmerText{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes textShineFlow{0%,100%{opacity:.85;filter:brightness(1)}50%{opacity:1;filter:brightness(1.3) drop-shadow(0 0 8px rgba(255,213,120,.6))}}
+.logo-motion{animation:float3D 5s ease-in-out infinite}
+.moon-glow{animation:glowMoon 3s ease-in-out infinite;transform-origin:center}
+.cnd-a{animation:candlePump 2s ease-in-out infinite;transform-origin:center}
+.cnd-b{animation:candlePump2 2.4s ease-in-out infinite .3s;transform-origin:center}
+.cnd-c{animation:candlePump 2.2s ease-in-out infinite .5s;transform-origin:center}
+.cnd-d{animation:candlePump2 2.6s ease-in-out infinite .7s;transform-origin:center}
+.arw-motion{animation:arrowGlide 2.5s ease-in-out infinite}
+.wv-1{animation:nileFlow1 4s ease-in-out infinite}
+.wv-2{animation:nileFlow2 5.5s ease-in-out infinite}
+.wv-bottom-1{animation:waveBottom1 4s ease-in-out infinite}
+.wv-bottom-2{animation:waveBottom2 5s ease-in-out infinite .3s}
+.wv-bottom-3{animation:waveBottom3 6s ease-in-out infinite .6s}
+.wv-bottom-4{animation:waveBottom4 7s ease-in-out infinite .9s}
+.aura{animation:ringSpin 30s linear infinite;transform-origin:center}
+.spk-1{animation:sparkleTwinkle 2s ease-in-out infinite}
+.spk-2{animation:sparkleTwinkle 2.5s ease-in-out infinite .4s}
+.spk-3{animation:sparkleTwinkle 3s ease-in-out infinite .8s}
+.brand-text-shine{animation:textShineFlow 3s ease-in-out infinite}
+.brand-shimmer{background:linear-gradient(90deg,var(--gold2) 0%,var(--gold3) 25%,var(--gold) 50%,var(--gold3) 75%,var(--gold2) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmerText 3s linear infinite}
+
+.lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:10001;display:none;flex-direction:column;justify-content:center;align-items:center;gap:20px}
+.lightbox img{max-width:92%;max-height:78vh;border-radius:12px}
+.lb-back{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;padding:12px 36px;border-radius:10px;font-weight:700;cursor:pointer}
+#authOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);z-index:9999;display:flex;justify-content:center;align-items:center}
+.auth-card{background:var(--card);border:1px solid var(--brd);padding:30px 40px 40px;border-radius:16px;width:440px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.auth-card h2{font-size:1.3rem;font-weight:700}
+.auth-card p{font-size:.85rem;color:var(--mut)}
+.auth-card input{width:100%;background:var(--inp);border:1px solid var(--brd);color:var(--txt);padding:13px 15px;border-radius:10px;font-size:.9rem;outline:none;text-align:center}
+.auth-card input:focus{border-color:var(--gold)}
+.auth-card button{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);font-weight:700;border:none;padding:13px;border-radius:10px;cursor:pointer}
+.auth-err{color:var(--red);font-size:.82rem;display:none}
+.auth-lnk{color:var(--gold);font-size:.85rem;cursor:pointer;text-decoration:underline}
+.user-bar{display:flex;align-items:center;gap:9px;background:var(--card2);border:1px solid var(--brd);padding:6px 12px;border-radius:8px;font-size:.85rem}
+.user-bar span.uname{color:var(--gold);font-weight:600}
+.btn-out{background:transparent;color:var(--red);border:1px solid var(--red);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.78rem}
+.container{max-width:1800px;margin:0 auto;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1}
+header{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:14px 22px;border-radius:14px;border:1px solid var(--brd);flex-wrap:wrap;gap:12px;box-shadow:var(--glow)}
+.hb{display:flex;align-items:center;gap:16px}
+.ht h1{font-size:1.5rem;font-weight:800}
+.ht p{font-size:.8rem;color:var(--mut);margin-top:3px}
+.ht p b{color:var(--gold2);font-weight:600}
+.ha{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.bh,.sel{padding:8px 13px;border-radius:8px;font-size:.82rem;font-weight:600;border:1px solid var(--brd);cursor:pointer;background:var(--card2);color:var(--txt2);font-family:'Vazirmatn'}
+.bh:hover{border-color:var(--gold);color:var(--gold)}
+.bg-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border-color:var(--gold);font-weight:700}
+.bh-danger{color:var(--red);border-color:var(--red)}
+.bh-danger:hover{background:var(--red);color:#fff}
+.bh-restore{color:var(--gold);border-color:var(--gold);display:none}
+.ci{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cb{display:flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--brd);padding:6px 11px;border-radius:8px;font-size:.8rem}
+.cb input{width:80px;background:transparent;border:none;color:var(--gold);font-weight:700;font-size:.85rem;outline:none;text-align:left;font-family:'Vazirmatn'}
+.risk-alert{display:none;background:rgba(248,113,113,.12);border:1px solid var(--red);border-radius:10px;padding:11px 16px;font-size:.86rem;color:var(--red);align-items:center;gap:9px}
+.sg{display:grid;grid-template-columns:repeat(7,1fr);gap:11px}
+.sc{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:14px 12px;text-align:center;box-shadow:var(--glow)}
+.sc span{font-size:.74rem;color:var(--mut);margin-bottom:6px;display:block}
+.sc h2{font-size:1.05rem;font-weight:700}
+.cg{color:var(--gold)}.cgr{color:var(--green)}.crd{color:var(--red)}.cbl{color:var(--blue)}.cpu{color:var(--purple)}.ccy{color:var(--cyan)}
+.sb{display:flex;gap:5px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--brd);border-radius:10px;padding:9px 14px;font-size:.82rem}
+.sd{width:11px;height:11px;border-radius:50%;display:inline-block}
+.sd.w{background:var(--green)}.sd.l{background:var(--red)}.sd.b{background:var(--mut2)}
+.ins{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px}
+.ii span{font-size:.75rem;color:var(--mut)}
+.ii div{font-size:.95rem;font-weight:700;color:var(--gold)}
+.mg{display:grid;grid-template-columns:1fr 1.3fr;gap:14px}
+.cd{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:18px}
+.cc{background:var(--card);border-radius:12px;padding:15px;border:1px solid var(--brd);overflow:hidden}
+.cc h3{font-size:.9rem;color:var(--txt2);margin-bottom:10px;font-weight:600}
+.sgr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cm{height:230px}.cs2{height:190px}
+.ft{color:var(--gold);font-size:1.05rem;margin-bottom:14px;font-weight:700}
+.fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:10px;margin-bottom:11px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:.78rem;color:var(--mut);font-weight:500}
+.fg input,.fg select,.fg textarea{background:var(--inp);border:1px solid var(--brd);color:var(--txt);padding:9px 11px;border-radius:8px;font-size:.85rem;outline:none;font-family:'Vazirmatn'}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold)}
+.bsub{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);font-weight:700;border:none;padding:12px;border-radius:10px;cursor:pointer;font-size:.95rem;margin-top:12px}
+.ssa{border:2px dashed var(--brd2);border-radius:10px;padding:12px;text-align:center;cursor:pointer;margin-bottom:8px}
+.ssa img{max-width:100%;max-height:80px;border-radius:6px;margin-top:6px}
+.tc{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:16px;overflow-x:auto}
+.tcl{display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.ts,.tf{background:var(--inp);border:1px solid var(--brd);color:var(--txt);padding:7px 11px;border-radius:8px;font-size:.85rem;outline:none;font-family:'Vazirmatn'}
+.ts{min-width:210px}
+table{width:100%;border-collapse:collapse;font-size:.82rem;text-align:right}
+th,td{padding:11px 8px;border-bottom:1px solid var(--brd);white-space:nowrap}
+th{color:var(--gold);background:var(--card2);font-weight:600;font-size:.78rem}
+tr:hover{background:var(--gold-glow)}
+.bb2{color:var(--green);font-weight:700;background:rgba(74,222,128,.1);padding:3px 8px;border-radius:5px;font-size:.78rem}
+.bs3{color:var(--red);font-weight:700;background:rgba(248,113,113,.1);padding:3px 8px;border-radius:5px;font-size:.78rem}
+.bv{background:rgba(248,113,113,.2);color:var(--red);padding:3px 8px;border-radius:5px;font-weight:700;font-size:.75rem}
+.bsf{background:rgba(74,222,128,.15);color:var(--green);padding:3px 8px;border-radius:5px;font-size:.75rem}
+.bd,.be2,.bdu2{border-radius:5px;padding:4px 8px;cursor:pointer;font-size:.75rem;background:transparent;font-weight:600}
+.bd{color:var(--red);border:1px solid var(--red)}.bd:hover{background:var(--red);color:#fff}
+.be2{color:var(--blue);border:1px solid var(--blue)}.be2:hover{background:var(--blue);color:#fff}
+.bdu2{color:var(--cyan);border:1px solid var(--cyan)}.bdu2:hover{background:var(--cyan);color:var(--bg)}
+.duration-tag{background:rgba(103,232,249,.12);color:var(--cyan);padding:3px 7px;border-radius:5px;font-size:.75rem;font-weight:600}
+.ca{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:16px}
+.ca h3{color:var(--gold);font-size:1rem;margin-bottom:12px;font-weight:700}
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:11px}
+.ai{background:var(--inp);border:1px solid var(--brd);border-radius:10px;overflow:hidden;cursor:pointer}
+.ai img{width:100%;height:105px;object-fit:cover}
+.ai .nf{padding:9px;font-size:.78rem}
+.ai .nf .sy{color:var(--gold);font-weight:700;font-size:.85rem}
+.ai .nf .dt{color:var(--mut);margin-top:3px}
+.ai .nf .pt{display:inline-block;padding:2px 7px;border-radius:4px;font-weight:700;font-size:.75rem;margin-top:4px}
+.mo{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:9998;display:none;justify-content:center;align-items:center;padding:20px}
+.mc{background:var(--card);border:1px solid var(--brd);width:100%;max-width:750px;border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:14px;max-height:88vh;overflow-y:auto}
+.mh{display:flex;justify-content:space-between;align-items:center;color:var(--gold);font-weight:700;font-size:1.05rem}
+.mx{background:none;border:none;color:var(--mut);font-size:1.3rem;cursor:pointer}
+.tc2{position:fixed;bottom:20px;left:20px;z-index:10000;display:flex;flex-direction:column;gap:7px}
+.tt{padding:11px 18px;border-radius:9px;font-size:.85rem;color:#fff;animation:tI .3s,tO .3s 2.7s forwards}
+.tok{background:linear-gradient(135deg,#059669,#10b981)}
+.ter{background:linear-gradient(135deg,#dc2626,#ef4444)}
+.tin{background:linear-gradient(135deg,#2563eb,#3b82f6)}
+.twa{background:linear-gradient(135deg,#d97706,#f59e0b);color:#000}
+@keyframes tI{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tO{to{opacity:0;transform:translateX(-30px)}}
+@media(max-width:1300px){.sg{grid-template-columns:repeat(4,1fr)}.mg{grid-template-columns:1fr}}
+@media(max-width:768px){.sg{grid-template-columns:repeat(2,1fr)}.sgr{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<linearGradient id="goldMain" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fff2c9"/><stop offset="50%" stop-color="#e8c988"/><stop offset="100%" stop-color="#b89050"/></linearGradient>
+<linearGradient id="goldDeep" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4b16a"/><stop offset="100%" stop-color="#8a6a3a"/></linearGradient>
+<radialGradient id="moonR" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#fff8e0"/><stop offset="50%" stop-color="#f5e5bc"/><stop offset="100%" stop-color="#c9a663"/></radialGradient>
+<linearGradient id="nileG" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#d4b16a" stop-opacity=".3"/><stop offset="50%" stop-color="#f5e5bc"/><stop offset="100%" stop-color="#d4b16a" stop-opacity=".3"/></linearGradient>
+<linearGradient id="arrG" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#b89050"/><stop offset="50%" stop-color="#f5e5bc"/><stop offset="100%" stop-color="#fff8e0"/></linearGradient>
+</defs>
+</svg>
+
+<template id="logoTpl">
+<svg viewBox="0 0 400 570" xmlns="http://www.w3.org/2000/svg">
+<circle cx="200" cy="200" r="180" fill="none" stroke="url(#goldMain)" stroke-width="1" stroke-dasharray="3 6" opacity=".25" class="aura"/>
+<circle cx="200" cy="200" r="165" fill="none" stroke="url(#goldMain)" stroke-width=".8" opacity=".4"/>
+<circle cx="335" cy="100" r="3" fill="#fff5d6" class="spk-1"/>
+<circle cx="80" cy="120" r="2.5" fill="#f5e5bc" class="spk-2"/>
+<circle cx="340" cy="240" r="2" fill="#fff5d6" class="spk-3"/>
+<circle cx="60" cy="240" r="2.2" fill="#f5e5bc" class="spk-1"/>
+<circle cx="320" cy="60" r="1.8" fill="#fff5d6" class="spk-3"/>
+<circle cx="50" cy="60" r="1.5" fill="#f5e5bc" class="spk-2"/>
+<g class="moon-glow">
+<path d="M 260 90 A 90 90 0 1 0 260 270 A 65 65 0 1 1 260 90 Z" fill="url(#moonR)" stroke="url(#goldDeep)" stroke-width="1.5"/>
+<path d="M 245 105 A 75 75 0 1 0 245 255" fill="none" stroke="#fff8e0" stroke-width=".8" opacity=".5"/>
+</g>
+<g class="cnd-a"><line x1="140" y1="160" x2="140" y2="240" stroke="url(#goldDeep)" stroke-width="2"/><rect x="132" y="180" width="16" height="45" fill="url(#goldMain)" rx="2"/></g>
+<g class="cnd-b"><line x1="170" y1="130" x2="170" y2="250" stroke="url(#goldDeep)" stroke-width="2"/><rect x="162" y="155" width="16" height="70" fill="url(#goldMain)" rx="2"/></g>
+<g class="cnd-c"><line x1="200" y1="145" x2="200" y2="235" stroke="url(#goldDeep)" stroke-width="2"/><rect x="192" y="170" width="16" height="55" fill="url(#goldMain)" rx="2"/></g>
+<g class="cnd-d"><line x1="230" y1="115" x2="230" y2="230" stroke="url(#goldDeep)" stroke-width="2"/><rect x="222" y="140" width="16" height="65" fill="url(#goldMain)" rx="2"/></g>
+<g class="arw-motion">
+<line x1="145" y1="260" x2="305" y2="115" stroke="url(#arrG)" stroke-width="10" stroke-linecap="round"/>
+<polygon points="320,105 285,105 293,140" fill="url(#arrG)"/>
+<line x1="145" y1="260" x2="125" y2="253" stroke="url(#arrG)" stroke-width="5" stroke-linecap="round"/>
+<line x1="145" y1="260" x2="135" y2="278" stroke="url(#arrG)" stroke-width="5" stroke-linecap="round"/>
+</g>
+<path d="M 130 320 Q 170 305 210 315 T 290 305 T 340 315" fill="none" stroke="url(#nileG)" stroke-width="5" stroke-linecap="round" class="wv-1"/>
+<path d="M 120 335 Q 160 320 200 330 T 280 320 T 340 330" fill="none" stroke="url(#nileG)" stroke-width="3" stroke-linecap="round" opacity=".6" class="wv-2"/>
+<g opacity=".7">
+<path d="M 60 385 Q 90 375 120 385" fill="none" stroke="url(#goldMain)" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="90" cy="381" r="2.5" fill="url(#goldMain)"/>
+<path d="M 280 385 Q 310 375 340 385" fill="none" stroke="url(#goldMain)" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="310" cy="381" r="2.5" fill="url(#goldMain)"/>
+<circle cx="200" cy="383" r="3" fill="url(#goldMain)"/>
+<circle cx="185" cy="383" r="1.5" fill="url(#goldMain)"/>
+<circle cx="215" cy="383" r="1.5" fill="url(#goldMain)"/>
+</g>
+<text x="200" y="435" text-anchor="middle" font-family="Georgia, serif" font-size="42" font-weight="900" fill="url(#goldMain)" stroke="url(#goldDeep)" stroke-width="0.5" letter-spacing="3" class="brand-text-shine">NILMAHRISE</text>
+<text x="200" y="463" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="url(#goldMain)" letter-spacing="4" opacity=".85">AUTOMATED TRADING BOT</text>
+<g opacity=".6">
+<line x1="90" y1="478" x2="180" y2="478" stroke="url(#goldMain)" stroke-width="1"/>
+<line x1="220" y1="478" x2="310" y2="478" stroke="url(#goldMain)" stroke-width="1"/>
+<circle cx="200" cy="478" r="3" fill="url(#goldMain)"/>
+</g>
+<path d="M 40 500 Q 90 485 140 495 T 240 485 T 360 495" fill="none" stroke="url(#nileG)" stroke-width="4" stroke-linecap="round" class="wv-bottom-1"/>
+<path d="M 40 515 Q 90 500 140 510 T 240 500 T 360 510" fill="none" stroke="url(#nileG)" stroke-width="3" stroke-linecap="round" opacity=".7" class="wv-bottom-2"/>
+<path d="M 40 528 Q 90 515 140 525 T 240 515 T 360 525" fill="none" stroke="url(#nileG)" stroke-width="2" stroke-linecap="round" opacity=".5" class="wv-bottom-3"/>
+<path d="M 40 540 Q 90 530 140 538 T 240 530 T 360 538" fill="none" stroke="url(#nileG)" stroke-width="1.5" stroke-linecap="round" opacity=".3" class="wv-bottom-4"/>
+</svg>
+</template>
+
+<div class="lightbox" id="lightbox"><img id="lbImg"><button class="lb-back" onclick="document.getElementById('lightbox').style.display='none'">← بازگشت</button></div>
+<div class="tc2" id="toastC"></div>
+
+<div id="authOverlay"><div class="auth-card">
+<div class="nlm-logo logo-motion" style="width:220px;height:315px" id="logoAuth"></div>
+<div id="loginForm" style="width:100%">
+<h2>ورود</h2>
+<p style="margin-top:4px">🌙 ژورنال معاملات حرفه‌ای</p>
+<input type="text" id="lUser" placeholder="نام کاربری" style="margin-top:12px">
+<input type="password" id="lPass" placeholder="رمز عبور" onkeypress="if(event.key==='Enter')doLogin()" style="margin-top:8px">
+<div class="auth-err" id="lErr">اشتباه!</div>
+<button onclick="doLogin()" style="margin-top:10px">ورود</button>
+<div class="auth-lnk" onclick="$('#loginForm').hide();$('#regForm').show()" style="margin-top:8px">ثبت‌نام</div>
+</div>
+<div id="regForm" style="display:none;width:100%">
+<h2>ثبت‌نام</h2>
+<input type="text" id="rName" placeholder="نام" style="margin-top:10px">
+<input type="text" id="rUser" placeholder="نام کاربری" style="margin-top:8px">
+<input type="password" id="rPass" placeholder="رمز" style="margin-top:8px">
+<div class="auth-err" id="rErr"></div>
+<button onclick="doReg()" style="margin-top:10px">ثبت‌نام</button>
+<div class="auth-lnk" onclick="$('#regForm').hide();$('#loginForm').show()" style="margin-top:8px">ورود</div>
+</div>
+</div></div>
+
+<div id="rptM" class="mo"><div class="mc">
+<div class="mh"><span>📊 آنالیز روانشناسی</span><button class="mx" onclick="$('#rptM').hide()">✕</button></div>
+<div class="fr">
+<div class="fg"><label>رفتار</label><select id="rptE" onchange="genRpt()">
+<option value="ALL">همه رفتارها</option>
+<optgroup label="حرفه‌ای">
+<option value="Plan">طبق پلان</option>
+<option value="Patient">صبور</option>
+<option value="Disciplined">با انضباط</option>
+<option value="Focused">تمرکز کامل</option>
+</optgroup>
+<optgroup label="اشتباهات عاطفی">
+<option value="FOMO">FOMO</option>
+<option value="Revenge">انتقامی</option>
+<option value="Greed">طمع</option>
+<option value="Fear">ترس</option>
+<option value="Hope">امید واهی</option>
+<option value="Panic">پنیک</option>
+</optgroup>
+<optgroup label="اشتباهات رفتاری">
+<option value="Overtrading">اورتردینگ</option>
+<option value="No SL">بدون SL</option>
+<option value="Moved SL">جابجایی SL</option>
+<option value="Early Exit">خروج زودهنگام</option>
+<option value="Averaging Down">میانگین‌گیری ضرر</option>
+</optgroup>
+</select></div>
+<div class="fg"><label>ستاپ</label><select id="rptS" onchange="genRpt()"><option value="ALL">همه</option></select></div>
+<div class="fg"><label>نماد</label><select id="rptSy" onchange="genRpt()"><option value="ALL">همه</option></select></div>
+</div>
+<div id="rptBox" style="background:var(--inp);padding:14px;border-radius:9px;border:1px solid var(--brd)"></div>
+</div></div>
+
+<div class="container">
+<header>
+<div class="hb">
+<div class="nlm-logo logo-motion" style="width:75px;height:108px" id="logoHeader"></div>
+<div class="ht"><h1><span class="brand-shimmer">NilmahRise</span> Pro Journal</h1><p><b>Automated Trading Bot</b> · ژورنال تخصصی معاملات</p></div>
+</div>
+<div class="ha">
+<div class="user-bar" id="userBar" style="display:none"><span>👤</span><span class="uname" id="curU">-</span><button class="btn-out" onclick="doLogout()">خروج</button></div>
+<div class="ci">
+<div class="cb"><span>💰 سرمایه</span><input type="number" id="capIn" value="100" oninput="renderAll()"></div>
+<div class="cb"><span>💵 تتر</span><input type="number" id="usdtIn" value="186000" oninput="renderAll()"></div>
+<div class="cb"><span>🛡️ DD%</span><input type="number" step="0.1" id="ddIn" value="5.0" oninput="renderAll()"></div>
+</div>
+<select class="sel" id="thS" onchange="setTheme(this.value)">
+<option value="dark">🌑 Dark</option><option value="light">☀️ Light</option><option value="ocean">🌊 Ocean</option><option value="royal">👑 Royal</option><option value="emerald">💚 Emerald</option>
+</select>
+<button class="bh bg-btn" onclick="document.getElementById('mt5F').click()">📥 آپلود MT5</button>
+<input type="file" id="mt5F" accept=".csv,.htm,.html,.xlsx,.xls" style="display:none" onchange="importMT5(event)">
+<button class="bh" onclick="$('#rptM').css('display','flex');popRF();genRpt()">📊 آنالیز</button>
+<button class="bh" onclick="exportCSV()">📈 اکسل</button>
+<button class="bh bh-danger" onclick="clearAll()">🗑️ پاک</button>
+<button class="bh bh-restore" id="btnR" onclick="restore()">🔄 بازگردانی</button>
+</div>
+</header>
+
+<div class="risk-alert" id="riskAlert"><span>⚠️</span><span id="riskTxt"></span></div>
+
+<div class="sg">
+<div class="sc"><span>تعداد</span><h2 id="k1">0</h2></div>
+<div class="sc"><span>وین ریت</span><h2 id="k2" class="cgr">0%</h2></div>
+<div class="sc"><span>سود/زیان</span><h2 id="k3" class="cg" style="font-size:.9rem">$0<br><span style="font-size:.7rem;color:var(--mut)">0 ت</span></h2></div>
+<div class="sc"><span>R:R</span><h2 id="k4" class="cbl">1:0</h2></div>
+<div class="sc"><span>پرافیت فاکتور</span><h2 id="k5" class="cpu">0</h2></div>
+<div class="sc"><span>بیشترین سود/زیان</span><h2 id="k6" style="font-size:.82rem">$0/$0</h2></div>
+<div class="sc"><span>استریک</span><h2 id="k7" class="ccy">-</h2></div>
+</div>
+
+<div class="sb" id="strkBar"><span style="color:var(--mut);font-size:.8rem">آخرین ۳۰:</span></div>
+
+<div class="ins">
+<div class="ii"><span>🥇 بهترین نماد</span><div id="i1">-</div></div>
+<div class="ii"><span>🌍 بهترین سشن</span><div id="i2">-</div></div>
+<div class="ii"><span>🎯 بهترین ستاپ</span><div id="i3">-</div></div>
+<div class="ii"><span>⏰ بهترین ساعت</span><div id="i4">-</div></div>
+<div class="ii"><span>⏱️ میانگین مدت</span><div id="i5">-</div></div>
+<div class="ii"><span>🔥 بیشترین استریک</span><div id="i6">0</div></div>
+</div>
+
+<div class="mg">
+<div class="cd">
+<div class="ft" id="fT">✏️ ثبت معامله جدید</div>
+<form id="tradeForm">
+<input type="hidden" id="editId" value="">
+<div class="fr">
+<div class="fg" style="grid-column:span 2"><label>نماد</label>
+<select id="f_sym" required>
+<optgroup label="🥇 فلزات گرانبها">
+<option value="XAUUSD">XAUUSD (طلا)</option>
+<option value="XAGUSD">XAGUSD (نقره)</option>
+<option value="XPTUSD">XPTUSD (پلاتین)</option>
+<option value="XPDUSD">XPDUSD (پالادیوم)</option>
+</optgroup>
+<optgroup label="💵 ارزهای اصلی (Majors)">
+<option value="EURUSD">EURUSD</option>
+<option value="GBPUSD">GBPUSD</option>
+<option value="USDJPY">USDJPY</option>
+<option value="USDCHF">USDCHF</option>
+<option value="AUDUSD">AUDUSD</option>
+<option value="USDCAD">USDCAD</option>
+<option value="NZDUSD">NZDUSD</option>
+</optgroup>
+<optgroup label="🔀 کراس یورو">
+<option value="EURGBP">EURGBP</option>
+<option value="EURJPY">EURJPY</option>
+<option value="EURCHF">EURCHF</option>
+<option value="EURAUD">EURAUD</option>
+<option value="EURCAD">EURCAD</option>
+<option value="EURNZD">EURNZD</option>
+</optgroup>
+<optgroup label="🔀 کراس پوند">
+<option value="GBPJPY">GBPJPY</option>
+<option value="GBPCHF">GBPCHF</option>
+<option value="GBPAUD">GBPAUD</option>
+<option value="GBPCAD">GBPCAD</option>
+<option value="GBPNZD">GBPNZD</option>
+</optgroup>
+<optgroup label="🔀 کراس ین">
+<option value="AUDJPY">AUDJPY</option>
+<option value="CADJPY">CADJPY</option>
+<option value="CHFJPY">CHFJPY</option>
+<option value="NZDJPY">NZDJPY</option>
+</optgroup>
+<optgroup label="🔀 کراس‌های دیگر">
+<option value="AUDCAD">AUDCAD</option>
+<option value="AUDCHF">AUDCHF</option>
+<option value="AUDNZD">AUDNZD</option>
+<option value="CADCHF">CADCHF</option>
+<option value="NZDCAD">NZDCAD</option>
+<option value="NZDCHF">NZDCHF</option>
+</optgroup>
+<optgroup label="🌍 اگزوتیک">
+<option value="USDTRY">USDTRY</option>
+<option value="USDZAR">USDZAR</option>
+<option value="USDMXN">USDMXN</option>
+<option value="USDSEK">USDSEK</option>
+<option value="USDNOK">USDNOK</option>
+<option value="USDDKK">USDDKK</option>
+<option value="USDSGD">USDSGD</option>
+<option value="USDHKD">USDHKD</option>
+<option value="USDCNH">USDCNH</option>
+<option value="USDPLN">USDPLN</option>
+<option value="USDRUB">USDRUB</option>
+<option value="USDTHB">USDTHB</option>
+<option value="USDINR">USDINR</option>
+</optgroup>
+<optgroup label="📊 شاخص‌ها">
+<option value="US30">US30 (داوجونز)</option>
+<option value="US100">US100 (نزدک)</option>
+<option value="US500">US500 (S&P)</option>
+<option value="US2000">US2000</option>
+<option value="GER40">GER40 (دکس)</option>
+<option value="UK100">UK100 (فوتسی)</option>
+<option value="FRA40">FRA40 (کک)</option>
+<option value="JPN225">JPN225 (نیکی)</option>
+<option value="AUS200">AUS200</option>
+<option value="HK50">HK50</option>
+<option value="CHINA50">CHINA50</option>
+<option value="ESP35">ESP35</option>
+</optgroup>
+<optgroup label="₿ کریپتو">
+<option value="BTCUSD">BTCUSD</option>
+<option value="ETHUSD">ETHUSD</option>
+<option value="LTCUSD">LTCUSD</option>
+<option value="XRPUSD">XRPUSD</option>
+<option value="BCHUSD">BCHUSD</option>
+<option value="ADAUSD">ADAUSD</option>
+<option value="DOTUSD">DOTUSD</option>
+<option value="SOLUSD">SOLUSD</option>
+<option value="DOGEUSD">DOGEUSD</option>
+<option value="LINKUSD">LINKUSD</option>
+<option value="AVAXUSD">AVAXUSD</option>
+<option value="MATICUSD">MATICUSD</option>
+</optgroup>
+<optgroup label="🛢️ انرژی">
+<option value="WTI">WTI</option>
+<option value="BRENT">BRENT</option>
+<option value="NATGAS">NATGAS</option>
+</optgroup>
+<optgroup label="🌾 کالاها">
+<option value="COPPER">COPPER (مس)</option>
+<option value="WHEAT">WHEAT (گندم)</option>
+<option value="CORN">CORN (ذرت)</option>
+<option value="COFFEE">COFFEE</option>
+<option value="SUGAR">SUGAR</option>
+<option value="COCOA">COCOA</option>
+</optgroup>
+</select>
+</div>
+<div class="fg"><label>سشن</label><select id="f_ses"><option value="London">لندن</option><option value="New York">نیویورک</option><option value="Asia">آسیا</option><option value="Overlap">همپوشانی</option></select></div>
+</div>
+<div class="fr">
+<div class="fg"><label>تاریخ</label><input type="text" id="f_date" required readonly></div>
+<div class="fg"><label>ساعت ورود</label><input type="time" id="f_et" required></div>
+<div class="fg"><label>ساعت خروج</label><input type="time" id="f_xt"></div>
+</div>
+<div class="fr">
+<div class="fg"><label>پوزیشن</label><select id="f_type"><option value="BUY">BUY</option><option value="SELL">SELL</option></select></div>
+<div class="fg"><label>ریسک %</label><input type="number" step="0.1" id="f_risk" value="1.0" required></div>
+<div class="fg"><label>حجم Lot</label><input type="number" step="0.01" id="f_lot" value="0.01" required></div>
+<div class="fg"><label>سود/زیان $</label><input type="number" step="any" id="f_pnl" required></div>
+</div>
+<div class="fr">
+<div class="fg"><label>قیمت ورود</label><input type="number" step="any" id="f_entry" required></div>
+<div class="fg"><label>SL</label><input type="number" step="any" id="f_sl"></div>
+<div class="fg"><label>TP</label><input type="number" step="any" id="f_tp"></div>
+<div class="fg"><label>قیمت خروج</label><input type="number" step="any" id="f_tpR"></div>
+</div>
+<div class="fr">
+<div class="fg"><label>ستاپ</label><select id="f_setup"><option value="OB+FVG">OB+FVG</option><option value="MTF">MTF</option><option value="Breakout">Breakout</option><option value="Liquidity">Liquidity</option><option value="Trend">Trend</option><option value="S&D">S&D</option><option value="Divergence">Divergence</option></select></div>
+<div class="fg"><label>🧠 روانشناسی</label>
+<select id="f_emo">
+<optgroup label="✅ حالت‌های حرفه‌ای">
+<option value="Plan">🎯 طبق پلان کامل</option>
+<option value="Patient">🧘 صبور و آرام</option>
+<option value="Disciplined">📏 با انضباط کامل</option>
+<option value="Risk Managed">🛡️ مدیریت ریسک عالی</option>
+<option value="Confident">💪 اعتماد به نفس منطقی</option>
+<option value="Focused">🎯 تمرکز کامل</option>
+<option value="Analytical">🧠 تحلیل عمیق</option>
+<option value="Waited Confirmation">⏳ منتظر تأیید ماند</option>
+</optgroup>
+<optgroup label="⚠️ اشتباهات عاطفی">
+<option value="FOMO">😰 FOMO (ترس از دست دادن)</option>
+<option value="Revenge">😡 معامله انتقامی</option>
+<option value="Greed">🤑 طمع (سود بیشتر)</option>
+<option value="Fear">😨 ترس (خروج زودهنگام)</option>
+<option value="Hope">🙏 امید واهی</option>
+<option value="Panic">😱 پنیک (فروش وحشتی)</option>
+<option value="Euphoria">🎉 سرخوشی (اعتماد بیش از حد)</option>
+<option value="Regret">😔 پشیمانی</option>
+<option value="Frustration">😤 ناامیدی و عصبانیت</option>
+</optgroup>
+<optgroup label="🚫 اشتباهات رفتاری">
+<option value="Overtrading">🔄 اورتردینگ (معاملات زیاد)</option>
+<option value="Overleveraging">⚖️ اهرم بیش از حد</option>
+<option value="No SL">❌ بدون حد ضرر</option>
+<option value="Moved SL">🔀 جابجایی SL به ضرر</option>
+<option value="Removed SL">🗑️ حذف حد ضرر</option>
+<option value="Early Exit">🚪 خروج زودهنگام</option>
+<option value="Late Entry">🐢 ورود دیرهنگام</option>
+<option value="Chasing Price">🏃 دنبال قیمت دویدن</option>
+<option value="Averaging Down">📉 میانگین‌گیری در ضرر</option>
+<option value="Ignored Plan">🙈 نادیده گرفتن پلان</option>
+<option value="No Analysis">🤷 بدون تحلیل</option>
+<option value="Copy Trade">👥 کپی از دیگران</option>
+</optgroup>
+<optgroup label="😴 حالت‌های ذهنی نامناسب">
+<option value="Fatigue">😪 خستگی</option>
+<option value="Distracted">📱 حواس‌پرتی</option>
+<option value="Emotional">💔 تصمیم احساسی</option>
+<option value="Impatient">⏱️ بی‌صبری</option>
+<option value="Boredom">😑 معامله از بیکاری</option>
+<option value="Stress">😰 استرس بالا</option>
+<option value="Sleep Deprived">😴 کم‌خوابی</option>
+<option value="Under Influence">🍺 تحت تأثیر مواد</option>
+</optgroup>
+<optgroup label="🎲 اشتباهات استراتژیک">
+<option value="News Trading">📰 معامله در خبر مهم</option>
+<option value="Against Trend">↩️ خلاف جهت روند</option>
+<option value="Low Timeframe">🔍 تایم فریم خیلی کوچک</option>
+<option value="Wrong Session">🌍 سشن نامناسب</option>
+<option value="No Confluence">❓ بدون همپوشانی سیگنال</option>
+<option value="Ignored HTF">📊 نادیده گرفتن تایم بالاتر</option>
+<option value="Bad Risk Reward">⚖️ ریسک به ریوارد ضعیف</option>
+<option value="Guessing">🎰 حدس زدن (شرط‌بندی)</option>
+</optgroup>
+</select>
+</div>
+</div>
+<div class="fr">
+<div class="fg"><label>کیفیت (1-10)</label><input type="number" id="f_qual" min="1" max="10" value="7"></div>
+<div class="fg"><label>تایم‌فریم</label><select id="f_tf"><option value="M1">M1</option><option value="M5" selected>M5</option><option value="M15">M15</option><option value="M30">M30</option><option value="H1">H1</option><option value="H4">H4</option><option value="D1">D1</option><option value="W1">W1</option></select></div>
+</div>
+<div class="fg" style="margin-bottom:8px"><label>🔄 جابه‌جایی SL/TP</label><textarea id="f_slm" rows="1"></textarea></div>
+<div class="fg" style="margin-bottom:5px"><label>📋 نوع فرایند</label>
+<select id="f_proc">
+<option value="">انتخاب کنید (اختیاری)</option>
+<optgroup label="✅ اجرای صحیح">
+<option value="طبق پلان کامل اجرا شد">✅ طبق پلان کامل اجرا شد</option>
+<option value="ورود و خروج طبق استراتژی">✅ ورود و خروج طبق استراتژی</option>
+<option value="صبر برای تأیید کامل">✅ صبر برای تأیید کامل کندل</option>
+<option value="مدیریت ریسک صحیح">✅ مدیریت ریسک صحیح</option>
+</optgroup>
+<optgroup label="⚠️ اشتباهات اجرایی">
+<option value="ورود عالی، خروج زودهنگام">⚠️ ورود عالی، خروج زودهنگام</option>
+<option value="ورود خوب، مدیریت ضعیف">⚠️ ورود خوب، مدیریت ضعیف</option>
+<option value="ورود دیر، سود کم">⚠️ ورود دیرهنگام، سود کم</option>
+<option value="ورود بد، نتیجه شانسی">⚠️ ورود بد، نتیجه شانسی</option>
+<option value="SL جابجا کردم به ضرر بیشتر">⚠️ SL را جابجا کردم</option>
+<option value="TP رو دستکاری کردم">⚠️ TP رو دستکاری کردم</option>
+<option value="بدون SL معامله کردم">⚠️ بدون SL معامله کردم</option>
+</optgroup>
+<optgroup label="🚨 اشتباهات احساسی">
+<option value="کاملاً احساسی وارد شدم">🚨 کاملاً احساسی وارد شدم</option>
+<option value="بعد از ضرر قبلی وارد شدم">🚨 معامله انتقامی</option>
+<option value="فومو زدم دنبال قیمت">🚨 فومو زدم</option>
+<option value="طمع کردم برای سود بیشتر">🚨 طمع کردم</option>
+<option value="از ترس زود بستم">🚨 از ترس زود بستم</option>
+<option value="امید واهی داشتم">🚨 امید واهی داشتم</option>
+</optgroup>
+<optgroup label="💡 درس‌های آموزنده">
+<option value="باید صبر بیشتری می‌کردم">💡 باید صبر بیشتری می‌کردم</option>
+<option value="باید حجم کمتری می‌گرفتم">💡 باید حجم کمتری می‌گرفتم</option>
+<option value="نباید در این سشن وارد می‌شدم">💡 نباید در این سشن وارد می‌شدم</option>
+<option value="خبر مهم رو چک نکردم">💡 خبر مهم رو چک نکردم</option>
+<option value="تایم فریم بالاتر رو ندیدم">💡 تایم فریم بالاتر رو ندیدم</option>
+<option value="سطح مهم رو نادیده گرفتم">💡 سطح مهم رو نادیده گرفتم</option>
+</optgroup>
+</select>
+</div>
+<div class="fg" style="margin-bottom:8px"><label>📝 توضیحات فرایند (آزاد)</label><textarea id="f_life" rows="3" placeholder="هر آنچه می‌خواهید بنویسید..."></textarea></div>
+<div class="ssa" onclick="document.getElementById('ssIn').click()"><div style="color:var(--mut);font-size:.82rem">📷 آپلود اسکرین‌شات</div><img id="ssPr" style="display:none"><input type="file" id="ssIn" accept="image/*" style="display:none" onchange="handleSS(event)"></div>
+<div class="fg" style="margin-bottom:8px"><label>🔗 لینک چارت</label><input type="url" id="f_link"></div>
+<button type="submit" id="subBtn" class="bsub">+ ثبت معامله</button>
+</form>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div class="cc"><h3>📈 Equity Curve</h3><div class="cm"><canvas id="eqCh"></canvas></div></div>
+<div class="sgr">
+<div class="cc"><h3>🧠 روانشناسی</h3><div class="cs2"><canvas id="emCh"></canvas></div></div>
+<div class="cc"><h3>🎯 وین‌ریت ستاپ</h3><div class="cs2"><canvas id="stCh"></canvas></div></div>
+</div>
+<div class="sgr">
+<div class="cc"><h3>💰 سود/زیان روزانه</h3><div class="cs2"><canvas id="daCh"></canvas></div></div>
+<div class="cc"><h3>📉 دراودان</h3><div class="cs2"><canvas id="ddCh"></canvas></div></div>
+</div>
+</div>
+</div>
+
+<div class="ca" id="archSec"><h3>🖼️ آرشیو چارت‌ها</h3><div class="ag" id="archGrid"></div></div>
+
+<div class="tc">
+<div class="tcl">
+<input type="text" class="ts" id="tSch" placeholder="🔍 جستجو..." oninput="renderTable()">
+<select class="tf" id="tFT" onchange="renderTable()"><option value="ALL">همه انواع</option><option value="BUY">BUY</option><option value="SELL">SELL</option></select>
+<select class="tf" id="tFR" onchange="renderTable()"><option value="ALL">همه نتایج</option><option value="WIN">سودده</option><option value="LOSS">زیان‌ده</option></select>
+<select class="tf" id="tFS" onchange="renderTable()"><option value="ALL">همه نمادها</option></select>
+<span style="color:var(--mut);font-size:.82rem;margin-right:auto" id="tCnt">0 معامله</span>
+</div>
+<table>
+<thead><tr>
+<th>#</th><th>تاریخ</th><th>ورود</th><th>خروج</th><th>مدت</th><th>نماد</th><th>نوع</th><th>ریسک</th><th>حجم (Lot)</th><th>Entry Price</th><th>SL</th><th>TP</th><th>Exit Price</th><th>سود/ضرر ($)</th><th>سود/ضرر (تومان)</th><th>DD</th><th>SL/TP</th><th>ستاپ</th><th>روانشناسی</th><th>فرایند</th><th>چارت</th><th>عملیات</th>
+</tr></thead>
+<tbody id="tBody"></tbody>
+</table>
+</div>
+</div>
+
+<script>
+let bk=null,curUser=null,ssData=null,eqCh,emCh,stCh,daCh,ddCh;
+const getU=()=>JSON.parse(localStorage.getItem('nlm_u'))||{};
+const svU=u=>localStorage.setItem('nlm_u',JSON.stringify(u));
+const getT=()=>curUser?JSON.parse(localStorage.getItem('nlm_t_'+curUser))||[]:[];
+const svT=t=>{if(curUser)localStorage.setItem('nlm_t_'+curUser,JSON.stringify(t))};
+const toast=(m,t='tok')=>{const c=document.getElementById('toastC'),d=document.createElement('div');d.className=`tt ${t}`;d.textContent=m;c.appendChild(d);setTimeout(()=>d.remove(),3000)};
+
+function injectLogo(id){const tpl=document.getElementById('logoTpl');const target=document.getElementById(id);if(target&&tpl)target.innerHTML=tpl.innerHTML}
+
+function doReg(){const n=$('#rName').val().trim(),u=$('#rUser').val().trim(),p=$('#rPass').val().trim();if(!n||!u||!p){$('#rErr').text('همه الزامی').show();return}const us=getU();if(us[u]){$('#rErr').text('قبلاً ثبت شده').show();return}us[u]={name:n,pass:p};svU(us);toast('ثبت شد!');$('#regForm').hide();$('#loginForm').show()}
+function doLogin(){const u=$('#lUser').val().trim(),p=$('#lPass').val().trim(),us=getU();if(us[u]&&us[u].pass===p){curUser=u;localStorage.setItem('nlm_c',u);$('#authOverlay').fadeOut(400);$('#userBar').show();$('#curU').text(us[u].name||u);toast('خوش آمدید 🌙');renderAll()}else{$('#lErr').show();toast('خطا!','ter')}}
+function doLogout(){curUser=null;localStorage.removeItem('nlm_c');location.reload()}
+function handleSS(e){const f=e.target.files[0];if(!f)return;if(f.size>2*1024*1024){toast('حداکثر ۲MB!','twa');return}const r=new FileReader();r.onload=ev=>{ssData=ev.target.result;document.getElementById('ssPr').src=ssData;document.getElementById('ssPr').style.display='block'};r.readAsDataURL(f)}
+function showLB(id){const t=getT().find(x=>x.id===id);if(t&&t.screenshot){document.getElementById('lbImg').src=t.screenshot;document.getElementById('lightbox').style.display='flex'}}
+
+function calcDuration(et,xt){if(!et||!xt||et==='-'||xt==='-')return '-';try{const[eh,em]=et.split(':').map(Number);const[xh,xm]=xt.split(':').map(Number);let mins=(xh*60+xm)-(eh*60+em);if(mins<0)mins+=1440;if(mins===0)return '0m';const h=Math.floor(mins/60),m=mins%60;return h>0?`${h}h ${m}m`:`${m}m`}catch(e){return '-'}}
+
+$(document).ready(function(){
+    injectLogo('logoAuth');injectLogo('logoHeader');
+    $("#f_date").persianDatepicker({format:'YYYY/MM/DD',initialValue:true,autoClose:true});
+    const us=getU();if(!us['admin']){us['admin']={name:'ادمین',pass:'admin'};svU(us)}
+    const s=localStorage.getItem('nlm_c');if(s&&us[s]){curUser=s;$('#authOverlay').hide();$('#userBar').show();$('#curU').text(us[s].name||s)}
+    
+    $('#f_proc').on('change',function(){const v=$(this).val();if(v){const cur=$('#f_life').val();$('#f_life').val(cur?(cur+'\n'+v):v);$(this).val('')}});
+    
+    $('#tradeForm').on('submit',function(e){
+        e.preventDefault();const eid=$('#editId').val();
+        const td={date:$('#f_date').val(),entryTime:$('#f_et').val(),exitTime:$('#f_xt').val(),symbol:$('#f_sym').val(),session:$('#f_ses').val(),type:$('#f_type').val(),riskPct:parseFloat($('#f_risk').val())||1,lot:parseFloat($('#f_lot').val())||.01,entry:parseFloat($('#f_entry').val())||0,sl:parseFloat($('#f_sl').val())||0,tp:parseFloat($('#f_tp').val())||0,tpReal:parseFloat($('#f_tpR').val())||0,pnl:parseFloat($('#f_pnl').val())||0,setup:$('#f_setup').val(),emotion:$('#f_emo').val(),lifecycle:$('#f_life').val(),sltpMove:$('#f_slm').val(),chartLink:$('#f_link').val(),entryQuality:parseInt($('#f_qual').val())||7,timeframe:$('#f_tf').val(),screenshot:ssData||null};
+        let T=getT();
+        if(eid){T=T.map(t=>{if(t.id==eid){const u={...t,...td};if(!ssData&&t.screenshot)u.screenshot=t.screenshot;return u}return t});$('#editId').val('');$('#subBtn').text('+ ثبت');$('#fT').text('✏️ ثبت معامله جدید');toast('ویرایش شد!','tin')}
+        else{td.id=Date.now();T.unshift(td);toast('ثبت شد!')}
+        ssData=null;document.getElementById('ssPr').style.display='none';svT(T);this.reset();$('#f_date').val(new persianDate().format('YYYY/MM/DD'));$('#f_risk').val('1.0');$('#f_lot').val('0.01');$('#f_qual').val('7');renderAll()});
+    $('#f_date').val(new persianDate().format('YYYY/MM/DD'));
+    const st=localStorage.getItem('nlm_th')||'dark';setTheme(st);$('#thS').val(st);renderAll()});
+
+const getCap=()=>parseFloat($('#capIn').val())||100;
+const getRate=()=>parseFloat($('#usdtIn').val())||186000;
+function renderAll(){renderKPIs();renderIns();renderStrk();renderTable();renderCharts();renderArch();checkDD();updSF()}
+function updSF(){const T=getT(),s=[...new Set(T.map(t=>t.symbol))],f=$('#tFS'),v=f.val();f.find('option:not(:first)').remove();s.forEach(x=>f.append(`<option value="${x}">${x}</option>`));if(v&&s.includes(v))f.val(v)}
+function popRF(){const T=getT();$('#rptSy').find('option:not(:first)').remove();[...new Set(T.map(t=>t.symbol))].forEach(x=>$('#rptSy').append(`<option value="${x}">${x}</option>`));$('#rptS').find('option:not(:first)').remove();[...new Set(T.map(t=>t.setup))].forEach(x=>$('#rptS').append(`<option value="${x}">${x}</option>`))}
+function checkDD(){const T=getT(),today=new persianDate().format('YYYY/MM/DD'),tp=T.filter(t=>t.date===today).reduce((s,t)=>s+t.pnl,0),lim=getCap()*(parseFloat($('#ddIn').val())||5)/100;if(tp<0&&Math.abs(tp)>=lim*.7){$('#riskAlert').css('display','flex');$('#riskTxt').text(`⚠️ ضرر امروز: $${Math.abs(tp).toFixed(2)}`)}else $('#riskAlert').hide()}
+
+function renderKPIs(){const T=getT(),n=T.length,ur=getRate();let w=0,tp=0,tl=0,mw=0,ml=0,tr=0,rc=0;
+T.forEach(t=>{const pnl=parseFloat(t.pnl)||0;if(pnl>0){w++;tp+=pnl;if(pnl>mw)mw=pnl}else if(pnl<0){tl+=Math.abs(pnl);if(pnl<ml)ml=pnl}if(t.entry&&t.sl&&t.tp){const rd=Math.abs(t.entry-t.sl),rw=Math.abs(t.tp-t.entry);if(rd>0){tr+=rw/rd;rc++}}});
+const wr=n?((w/n)*100).toFixed(1):0,pf=tl>0?(tp/tl).toFixed(2):(tp>0?'∞':'0'),ar=rc?(tr/rc).toFixed(2):'0',np=tp-tl,nt=np*ur;
+let cs=0,st='';const so=[...T].reverse();for(let i=so.length-1;i>=0;i--){const pn=parseFloat(so[i].pnl)||0;const ty=pn>0?'w':(pn<0?'l':'b');if(i===so.length-1){st=ty;cs=1}else{if(ty===st)cs++;else break}}
+$('#k1').text(n);$('#k2').text(wr+'%').attr('class',parseFloat(wr)>=50?'cgr':'crd');
+$('#k3').html(`$${np.toFixed(2)}<br><span style="font-size:.7rem;color:var(--mut)">${Math.round(nt).toLocaleString()} ت</span>`).attr('class',np>=0?'cg':'crd');
+$('#k4').text('1:'+ar);$('#k5').text(pf);$('#k6').html(`<span class="cgr">+$${mw.toFixed(1)}</span> / <span class="crd">$${Math.abs(ml).toFixed(1)}</span>`);
+if(n>0)$('#k7').text(`${st==='w'?'🟢':(st==='l'?'🔴':'⚪')} ${cs}x`).attr('class',st==='w'?'cgr':(st==='l'?'crd':'ccy'));else $('#k7').text('-')}
+
+function renderStrk(){const T=getT(),c=$('#strkBar');c.html('<span style="color:var(--mut);font-size:.8rem">آخرین ۳۰:</span>');[...T].reverse().slice(-30).forEach(t=>{const pn=parseFloat(t.pnl)||0;c.append(`<span class="sd ${pn>0?'w':(pn<0?'l':'b')}" title="$${pn.toFixed(2)}"></span>`)})}
+
+function renderIns(){const T=getT();if(!T.length){$('#i1,#i2,#i3,#i4,#i5,#i6').text('-');return}const sm={},se={},su={},tm={};let td=0,dc=0;T.forEach(t=>{const pn=parseFloat(t.pnl)||0;sm[t.symbol]=(sm[t.symbol]||0)+pn;se[t.session]=(se[t.session]||0)+pn;su[t.setup]=(su[t.setup]||0)+pn;if(t.entryTime)tm[t.entryTime.split(':')[0]+':00']=(tm[t.entryTime.split(':')[0]+':00']||0)+pn;if(t.entryTime&&t.exitTime){const[eh,em2]=t.entryTime.split(':').map(Number),[xh,xm]=t.exitTime.split(':').map(Number);let d=(xh*60+xm)-(eh*60+em2);if(d<0)d+=1440;if(d>0){td+=d;dc++}}});const bo=m=>Object.keys(m).length?Object.keys(m).reduce((a,b)=>m[a]>m[b]?a:b):'-';$('#i1').text(bo(sm));$('#i2').text(bo(se));$('#i3').text(bo(su));$('#i4').text(bo(tm));
+if(dc){const avg=Math.round(td/dc);const h=Math.floor(avg/60),m=avg%60;$('#i5').text(h>0?`${h}h ${m}m`:`${m}m`)}else $('#i5').text('-');
+let ms=0,cur=0;[...T].reverse().forEach(t=>{if(parseFloat(t.pnl)>0){cur++;if(cur>ms)ms=cur}else cur=0});$('#i6').text(ms)}
+
+function renderTable(){const T=getT(),tb=$('#tBody');tb.empty();const ur=getRate(),md=parseFloat($('#ddIn').val())||5,cap=getCap(),st=($('#tSch').val()||'').toLowerCase(),ft=$('#tFT').val(),fr=$('#tFR').val(),fs=$('#tFS').val();
+const dp={};T.forEach(t=>{dp[t.date]=(dp[t.date]||0)+(parseFloat(t.pnl)||0)});
+let fl=T.filter(t=>{const pn=parseFloat(t.pnl)||0;if(ft!=='ALL'&&t.type!==ft)return false;if(fr==='WIN'&&pn<=0)return false;if(fr==='LOSS'&&pn>=0)return false;if(fs!=='ALL'&&t.symbol!==fs)return false;if(st&&!`${t.symbol} ${t.setup} ${t.emotion} ${t.lifecycle||''}`.toLowerCase().includes(st))return false;return true});
+$('#tCnt').text(`${fl.length}/${T.length} معامله`);
+fl.forEach((t,i)=>{
+    const pnl=parseFloat(t.pnl)||0;
+    const tm2=pnl*ur;
+    const iv=dp[t.date]<0&&Math.abs(dp[t.date])>=cap*(md/100);
+    const lp=(t.lifecycle||'-').substring(0,35)+((t.lifecycle||'').length>35?'…':'');
+    const dur=calcDuration(t.entryTime,t.exitTime);
+    tb.append(`<tr>
+<td style="color:var(--mut)">${i+1}</td>
+<td>${t.date}</td>
+<td>${t.entryTime||'-'}</td>
+<td>${t.exitTime||'-'}</td>
+<td>${dur!=='-'?`<span class="duration-tag">${dur}</span>`:'-'}</td>
+<td><b>${t.symbol}</b></td>
+<td>${t.type==='BUY'?'<span class="bb2">BUY</span>':'<span class="bs3">SELL</span>'}</td>
+<td>${t.riskPct}%</td>
+<td style="color:var(--gold);font-weight:700">${t.lot}</td>
+<td>${t.entry||'-'}</td><td>${t.sl||'-'}</td><td>${t.tp||'-'}</td>
+<td style="color:var(--cyan)">${t.tpReal||'-'}</td>
+<td style="color:${pnl>=0?'var(--green)':'var(--red)'};font-weight:700">${pnl>=0?'+':''}$${pnl.toFixed(2)}</td>
+<td style="color:${pnl>=0?'var(--green)':'var(--red)'};font-size:.76rem">${pnl>=0?'+':''}${Math.round(tm2).toLocaleString()} ت</td>
+<td>${iv?'<span class="bv">⚠️</span>':'<span class="bsf">✓</span>'}</td>
+<td style="font-size:.75rem;max-width:110px;white-space:normal">${(t.sltpMove||'-').substring(0,30)}</td>
+<td style="font-size:.75rem">${t.setup}</td>
+<td style="font-size:.75rem">${t.emotion}</td>
+<td style="font-size:.74rem;max-width:130px;white-space:normal;line-height:1.4" title="${(t.lifecycle||'').replace(/"/g,'&quot;')}">${lp}</td>
+<td>${t.screenshot?`<span style="cursor:pointer;font-size:1.1rem" onclick="showLB(${t.id})">🖼️</span>`:''}${t.chartLink?` <a href="${t.chartLink}" target="_blank" style="color:var(--blue)">🔗</a>`:''}</td>
+<td style="white-space:nowrap"><button class="be2" onclick="editT(${t.id})">✏️</button> <button class="bdu2" onclick="dupT(${t.id})">📋</button> <button class="bd" onclick="delT(${t.id})">🗑️</button></td>
+</tr>`)})}
+
+function renderArch(){const T=getT(),g=$('#archGrid');g.empty();const wm=T.filter(t=>t.screenshot||t.chartLink);if(!wm.length){$('#archSec').hide();return}$('#archSec').show();
+wm.forEach(t=>{const pnl=parseFloat(t.pnl)||0;const pc=pnl>=0?'var(--green)':'var(--red)',pb=pnl>=0?'rgba(74,222,128,.15)':'rgba(248,113,113,.15)';const dur=calcDuration(t.entryTime,t.exitTime);
+g.append(`<div class="ai">${t.screenshot?`<img src="${t.screenshot}" onclick="showLB(${t.id})">`:`<div style="height:90px;display:flex;justify-content:center;align-items:center;background:var(--inp)"><a href="${t.chartLink}" target="_blank" style="color:var(--blue);font-size:1.5rem">🔗</a></div>`}<div class="nf"><div class="sy">${t.symbol} <span style="font-size:.7rem;color:var(--mut)">${t.date}</span></div><div class="dt">${t.type} | ${t.setup}</div><div class="dt" style="font-size:.72rem">حجم: ${t.lot} | مدت: ${dur}</div><span class="pt" style="color:${pc};background:${pb}">${pnl>=0?'+':''}$${pnl.toFixed(2)}</span></div></div>`)})}
+
+function editT(id){const T=getT(),t=T.find(x=>x.id==id);if(!t)return;
+$('#editId').val(t.id);$('#f_sym').val(t.symbol);$('#f_ses').val(t.session);$('#f_date').val(t.date);$('#f_et').val(t.entryTime||'');$('#f_xt').val(t.exitTime||'');$('#f_type').val(t.type);$('#f_risk').val(t.riskPct);$('#f_lot').val(t.lot);$('#f_pnl').val(t.pnl);$('#f_entry').val(t.entry);$('#f_sl').val(t.sl);$('#f_tp').val(t.tp);$('#f_tpR').val(t.tpReal||'');$('#f_setup').val(t.setup);$('#f_emo').val(t.emotion);$('#f_life').val(t.lifecycle||'');$('#f_slm').val(t.sltpMove||'');$('#f_link').val(t.chartLink||'');$('#f_qual').val(t.entryQuality||7);$('#f_tf').val(t.timeframe||'M5');
+if(t.screenshot){ssData=null;document.getElementById('ssPr').src=t.screenshot;document.getElementById('ssPr').style.display='block'}else document.getElementById('ssPr').style.display='none';
+$('#subBtn').text('💾 ذخیره');$('#fT').text('✏️ ویرایش');window.scrollTo({top:0,behavior:'smooth'})}
+
+function dupT(id){const T=getT(),t=T.find(x=>x.id==id);if(!t)return;T.unshift({...t,id:Date.now()});svT(T);renderAll();toast('کپی!','tin')}
+function delT(id){if(!confirm('حذف؟'))return;let T=getT();T=T.filter(t=>t.id!==id);svT(T);renderAll();toast('حذف','tin')}
+function clearAll(){if(confirm('⚠️ پاکسازی؟')){bk=[...getT()];svT([]);renderAll();$('#btnR').show();toast('پاک شد','twa')}}
+function restore(){if(bk){svT(bk);bk=null;renderAll();$('#btnR').hide();toast('بازگردانی!')}}
+function setTheme(t){document.body.className=t==='dark'?'':`t-${t}`;localStorage.setItem('nlm_th',t)}
+
+function renderCharts(){const T=getT(),cap=getCap();let eq=cap;const el=['شروع'],ed=[cap],so=[...T].reverse();so.forEach((t,i)=>{eq+=(parseFloat(t.pnl)||0);el.push(`#${i+1}`);ed.push(eq)});
+if(eqCh)eqCh.destroy();const ctx=document.getElementById('eqCh').getContext('2d'),gr=ctx.createLinearGradient(0,0,0,230);gr.addColorStop(0,'rgba(232,201,136,.25)');gr.addColorStop(1,'rgba(232,201,136,0)');
+eqCh=new Chart(ctx,{type:'line',data:{labels:el,datasets:[{data:ed,borderColor:'#e8c988',backgroundColor:gr,fill:true,tension:.35,pointRadius:2,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{grid:{color:'rgba(128,128,128,.08)'},ticks:{color:'#8a8a8a'}}}}});
+const ec={};T.forEach(t=>{ec[t.emotion]=(ec[t.emotion]||0)+1});if(emCh)emCh.destroy();emCh=new Chart(document.getElementById('emCh').getContext('2d'),{type:'doughnut',data:{labels:Object.keys(ec),datasets:[{data:Object.values(ec),backgroundColor:['#e8c988','#4ade80','#f87171','#a78bfa','#60a5fa','#67e8f9','#f0abfc','#84cc16','#f97316','#ec4899']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},color:'#8a8a8a'}}}}});
+const ss={};T.forEach(t=>{if(!ss[t.setup])ss[t.setup]={w:0,n:0};ss[t.setup].n++;if((parseFloat(t.pnl)||0)>0)ss[t.setup].w++});const sl=Object.keys(ss),sw=sl.map(s=>((ss[s].w/ss[s].n)*100).toFixed(1));
+if(stCh)stCh.destroy();stCh=new Chart(document.getElementById('stCh').getContext('2d'),{type:'bar',data:{labels:sl.length?sl:['—'],datasets:[{data:sw.length?sw:[0],backgroundColor:'#60a5fa',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{max:100,ticks:{color:'#8a8a8a'}},y:{ticks:{color:'#8a8a8a'}}}}});
+const dd2={};T.forEach(t=>{dd2[t.date]=(dd2[t.date]||0)+(parseFloat(t.pnl)||0)});const dl=Object.keys(dd2).sort(),dv=dl.map(d=>dd2[d]),dcc=dv.map(v=>v>=0?'#4ade80':'#f87171');
+if(daCh)daCh.destroy();daCh=new Chart(document.getElementById('daCh').getContext('2d'),{type:'bar',data:{labels:dl,datasets:[{data:dv,backgroundColor:dcc,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9},color:'#8a8a8a'}},y:{ticks:{color:'#8a8a8a'}}}}});
+let pk=cap,eq2=cap;const ddl=['شروع'],ddd=[0];so.forEach((t,i)=>{eq2+=(parseFloat(t.pnl)||0);if(eq2>pk)pk=eq2;ddl.push(`#${i+1}`);ddd.push(-((pk-eq2)/pk)*100)});
+if(ddCh)ddCh.destroy();const dc2=document.getElementById('ddCh').getContext('2d'),dg=dc2.createLinearGradient(0,0,0,190);dg.addColorStop(0,'rgba(248,113,113,0)');dg.addColorStop(1,'rgba(248,113,113,.3)');
+ddCh=new Chart(dc2,{type:'line',data:{labels:ddl,datasets:[{data:ddd,borderColor:'#f87171',backgroundColor:dg,fill:true,tension:.3,pointRadius:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{callback:v=>v.toFixed(1)+'%',color:'#8a8a8a'}}}}})}
+
+function genRpt(){const T=getT(),em=$('#rptE').val(),sp=$('#rptS').val(),sy=$('#rptSy').val();
+let fl=T.filter(t=>(em==='ALL'||t.emotion===em)&&(sp==='ALL'||t.setup===sp)&&(sy==='ALL'||t.symbol===sy));
+const n=fl.length,w=fl.filter(t=>(parseFloat(t.pnl)||0)>0).length,s=fl.reduce((a,t)=>a+(parseFloat(t.pnl)||0),0),wr=n?((w/n)*100).toFixed(1):0;
+$('#rptBox').html(`<div>تعداد: ${n} | وین‌ریت: ${wr}% | PnL: $${s.toFixed(2)}</div>`)}
+
+function importMT5(e){
+    const f=e.target.files[0];if(!f)return;
+    const fn=f.name.toLowerCase(),r=new FileReader();
+    if(fn.endsWith('.xlsx')||fn.endsWith('.xls')){
+        r.onload=function(ev){
+            try{const d=new Uint8Array(ev.target.result);const wb=XLSX.read(d,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const json=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});parseMT5(json)}
+            catch(err){toast('خطا: '+err.message,'ter');console.error(err)}
+        };
+        r.readAsArrayBuffer(f);return;
+    }
+    r.onload=function(ev){
+        const c=ev.target.result;
+        if(c.includes('<table')||c.includes('<TABLE')){
+            const p=new DOMParser(),doc=p.parseFromString(c,'text/html');
+            const allRows=[];
+            doc.querySelectorAll('tr').forEach(row=>{const cells=[];row.querySelectorAll('td,th').forEach(c=>cells.push((c.innerText||c.textContent||'').trim()));if(cells.length)allRows.push(cells)});
+            parseMT5(allRows);
+        }else{
+            const lines=c.split('\n'),rows=[];
+            lines.forEach(l=>{if(l.trim())rows.push(l.split(/[,;\t]/).map(x=>x.trim().replace(/^"|"$/g,'')))});
+            parseMT5(rows);
+        }
+    };
+    r.readAsText(f);
+}
+
+function parseMT5(rows){
+    if(!rows||!rows.length){toast('فایل خالی','ter');return}
+    console.log('===== MT5 Import =====');
+    const num=(v)=>{if(v===undefined||v===null||v==='')return 0;let s=(v+'').toString().trim().replace(/\s+/g,'').replace(/\u00A0/g,'').replace(/,(?=\d{3})/g,'').replace(/[^\d.\-]/g,'');const n=parseFloat(s);return isNaN(n)?0:n};
+    const parseDT=(v)=>{if(!v)return{date:null,time:null};const s=(v+'').toString().trim();let date=null,time=null;const dm=s.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);if(dm){try{date=new persianDate(new Date(parseInt(dm[1]),parseInt(dm[2])-1,parseInt(dm[3]))).format('YYYY/MM/DD')}catch(e){}}const tm=s.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);if(tm)time=tm[1].padStart(2,'0')+':'+tm[2];return{date,time}};
+    
+    let dealsStart=-1,dealsEnd=rows.length;
+    for(let i=0;i<rows.length;i++){const rt=(rows[i]||[]).filter(c=>c).join(' ').toLowerCase().trim();if(rt==='deals'||rt.startsWith('deals ')){dealsStart=i;break}}
+    if(dealsStart<0){toast('❌ بخش Deals در فایل نیست!','ter');return}
+    for(let i=dealsStart+1;i<rows.length;i++){const rt=(rows[i]||[]).filter(c=>c).join(' ').toLowerCase().trim();if(rt.includes('summary')||(rt.includes('total')&&rt.length<30)){dealsEnd=i;break}}
+    
+    let hdrIdx=-1,hdrCells=null;
+    for(let i=dealsStart;i<Math.min(dealsStart+10,dealsEnd);i++){const cells=rows[i];if(!cells)continue;const lc=cells.map(c=>(c+'').toLowerCase().trim());if(lc.includes('symbol')&&lc.includes('direction')&&lc.includes('volume')&&lc.includes('profit')){hdrIdx=i;hdrCells=lc;break}}
+    if(hdrIdx<0){toast('❌ ستون‌های Deals یافت نشد','ter');return}
+    
+    const col={};
+    hdrCells.forEach((c,idx)=>{if(c==='time')col.time=idx;else if(c==='deal')col.deal=idx;else if(c==='symbol')col.symbol=idx;else if(c==='type')col.type=idx;else if(c==='direction')col.direction=idx;else if(c==='volume'||c==='lots')col.volume=idx;else if(c==='price')col.price=idx;else if(c==='order')col.order=idx;else if(c==='commission')col.commission=idx;else if(c==='fee')col.fee=idx;else if(c==='swap')col.swap=idx;else if(c==='profit')col.profit=idx;else if(c==='balance')col.balance=idx;else if(c==='comment')col.comment=idx});
+    
+    const deals=[];
+    for(let i=hdrIdx+1;i<dealsEnd;i++){
+        const row=rows[i];if(!row||row.length<5)continue;
+        const rowText=row.join(' ').toLowerCase();
+        if(rowText.includes('balance')&&!rowText.includes('buy')&&!rowText.includes('sell'))continue;
+        if(rowText.includes('deposit')||rowText.includes('withdrawal'))continue;
+        const typeVal=(row[col.type]||'').toString().toLowerCase().trim();
+        if(typeVal!=='buy'&&typeVal!=='sell')continue;
+        const direction=(row[col.direction]||'').toString().toLowerCase().trim();
+        if(direction!=='in'&&direction!=='out')continue;
+        const dt=parseDT(row[col.time]);
+        deals.push({time:dt.time,date:dt.date,symbol:(row[col.symbol]||'').toString().trim(),type:typeVal,direction:direction,volume:num(row[col.volume]),price:num(row[col.price]),order:(row[col.order]||'').toString().trim(),commission:col.commission!==undefined?num(row[col.commission]):0,fee:col.fee!==undefined?num(row[col.fee]):0,swap:col.swap!==undefined?num(row[col.swap]):0,profit:col.profit!==undefined?num(row[col.profit]):0,comment:col.comment!==undefined?(row[col.comment]||'').toString().trim():''});
+    }
+    
+    let posStart=-1,posEnd=dealsStart;
+    for(let i=0;i<dealsStart;i++){const rt=(rows[i]||[]).filter(c=>c).join(' ').toLowerCase().trim();if(rt==='positions'){posStart=i;break}}
+    const positionsMap={};
+    if(posStart>=0){
+        let posHdr=-1,posHdrCells=null;
+        for(let i=posStart;i<Math.min(posStart+10,posEnd);i++){const cells=rows[i];if(!cells)continue;const lc=cells.map(c=>(c+'').toLowerCase().trim());if(lc.includes('symbol')&&lc.includes('position')&&lc.includes('type')){posHdr=i;posHdrCells=lc;break}}
+        if(posHdr>=0){
+            const pCol={};let priceCount=0,timeCount=0;
+            posHdrCells.forEach((c,idx)=>{if(c==='time'){if(timeCount===0)pCol.openTime=idx;else pCol.closeTime=idx;timeCount++}else if(c==='position')pCol.position=idx;else if(c==='symbol')pCol.symbol=idx;else if(c==='type')pCol.type=idx;else if(c==='volume')pCol.volume=idx;else if(c==='price'){if(priceCount===0)pCol.openPrice=idx;else pCol.closePrice=idx;priceCount++}else if(c==='s / l'||c==='s/l'||c==='sl')pCol.sl=idx;else if(c==='t / p'||c==='t/p'||c==='tp')pCol.tp=idx});
+            for(let i=posHdr+1;i<posEnd;i++){const row=rows[i];if(!row||row.length<5)continue;const posId=(row[pCol.position]||'').toString().trim();if(!posId||!/^\d+$/.test(posId))continue;const sl=pCol.sl!==undefined&&row[pCol.sl]?num(row[pCol.sl]):0;const tp=pCol.tp!==undefined&&row[pCol.tp]?num(row[pCol.tp]):0;positionsMap[posId]={sl,tp}}
+        }
+    }
+    
+    const openPositions=[],finalTrades=[];
+    deals.sort((a,b)=>{const ta=(a.date||'')+' '+(a.time||'');const tb=(b.date||'')+' '+(b.time||'');return ta.localeCompare(tb)});
+    
+    deals.forEach(d=>{
+        if(d.direction==='in'){openPositions.push(d)}
+        else if(d.direction==='out'){
+            let matchIdx=-1;
+            for(let i=0;i<openPositions.length;i++){if(openPositions[i].symbol===d.symbol&&openPositions[i].volume===d.volume){matchIdx=i;break}}
+            if(matchIdx<0){for(let i=0;i<openPositions.length;i++){if(openPositions[i].symbol===d.symbol){matchIdx=i;break}}}
+            if(matchIdx>=0){
+                const inDeal=openPositions[matchIdx];openPositions.splice(matchIdx,1);
+                const netProfit=d.profit+d.commission+d.fee+d.swap+inDeal.commission+inDeal.fee+inDeal.swap;
+                const symbolClean=inDeal.symbol.toUpperCase().replace(/\.(ECN|M|MICRO|PRO|RAW|C|MINI|STD)$/i,'').replace(/[^A-Z0-9]/g,'');
+                let sl=0,tp=0;
+                if(positionsMap[inDeal.order]){sl=positionsMap[inDeal.order].sl;tp=positionsMap[inDeal.order].tp}
+                finalTrades.push({id:Date.now()+Math.random(),date:inDeal.date||new persianDate().format('YYYY/MM/DD'),entryTime:inDeal.time||'',exitTime:d.time||'',symbol:symbolClean,session:'London',type:inDeal.type==='buy'?'BUY':'SELL',riskPct:1,lot:inDeal.volume,entry:inDeal.price,sl:sl,tp:tp,tpReal:d.price,pnl:netProfit,setup:'OB+FVG',emotion:'Plan',lifecycle:`از MT5 وارد شد | Order: ${inDeal.order}`+(d.comment?` | ${d.comment}`:''),sltpMove:'',chartLink:'',entryQuality:5,timeframe:'M5',screenshot:null});
+            }
+        }
+    });
+    
+    if(finalTrades.length){let T=getT();T=[...finalTrades,...T];svT(T);renderAll();toast(`✅ ${finalTrades.length} معامله وارد شد!`)}
+    else{toast('❌ معامله‌ای یافت نشد','ter')}
+}
+
+function exportCSV(){const T=getT(),ur=getRate();let csv="#,تاریخ,ورود,خروج,مدت,نماد,نوع,ریسک,حجم,Entry,SL,TP,Exit,PnL$,PnLتومان,ستاپ,روانشناسی\n";T.forEach((t,i)=>{const d=calcDuration(t.entryTime,t.exitTime);csv+=`${i+1},${t.date},${t.entryTime},${t.exitTime||''},${d},${t.symbol},${t.type},${t.riskPct},${t.lot},${t.entry},${t.sl},${t.tp},${t.tpReal||''},${t.pnl},${Math.round((parseFloat(t.pnl)||0)*ur)},${t.setup},${t.emotion}\n`});const l=document.createElement("a");l.href=encodeURI("data:text/csv;charset=utf-8,\uFEFF"+csv);l.download=`NilmahRise_${new persianDate().format('YYYY-MM-DD')}.csv`;l.click();toast('دانلود شد!')}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('.mo').hide();$('#lightbox').hide()}})
+</script>
+</body>
+</html>
